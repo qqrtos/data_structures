@@ -285,6 +285,27 @@ int TestStack()
         goto cleanup;
     }
 
+    StPush(usedStack, 1);
+    StPush(usedStack, 2);
+    StPush(usedStack, 3);
+    CC_STACK* stackToPush = NULL;
+    StCreate(&stackToPush);
+    StPush(stackToPush, 1);
+    StPush(stackToPush, 4);
+    StPush(stackToPush, 5);
+    if (0 != StPushStack(usedStack, stackToPush) || usedStack->size != 6)
+    {
+        printf("StPushStack failed!\n");
+        retVal = -1;
+        goto cleanup;
+    }
+
+    while (usedStack->top != usedStack->base) {
+        int value;
+        StPop(usedStack, &value);
+        printf("%d ", value);
+    }
+
 cleanup:
     if (NULL != usedStack)
     {
