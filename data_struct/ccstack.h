@@ -2,16 +2,15 @@
 
 typedef struct _NODE {
 	struct _NODE* next;
-	struct _NODE* prev;
+	struct _NODE* last;
 	int value;
 }NODE;
 
 typedef struct _CC_STACK {
-	// Members
 	NODE* base;
 	NODE* top;
-	int count;
-} CC_STACK;
+	int size;
+}CC_STACK;
 
 int StCreate(CC_STACK** Stack);
 int StDestroy(CC_STACK** Stack);

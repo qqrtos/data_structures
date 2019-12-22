@@ -3,24 +3,28 @@
 
 int StCreate(CC_STACK** Stack)
 {
-	/*CC_UNREFERENCED_PARAMETER(Stack);*/
-
 	*Stack = (CC_STACK*)malloc(1 * sizeof(CC_STACK));  ///Allocate space for the stack.
 	NODE* node = (NODE*)malloc(1 * sizeof(NODE));   ///Space for a node.
-	node->next = NULL;
-	node->prev = NULL;   ///The first node has no previous node and no next node.
+
+	if (*Stack == NULL || node == NULL)
+		return -1;  ///If there's no more memory available, return.
+
+	node->next = NULL;   ///The first node has no previous node.
+	node->last = NULL;
 	(*Stack)->base = node;
 	(*Stack)->top = node;
-	(*Stack)->count = 0;
+	(*Stack)->size = 0;
 	return 0;
 }
 
 int StDestroy(CC_STACK** Stack)
 {
-	/*CC_UNREFERENCED_PARAMETER(Stack);*/
-
+	if (*Stack == NULL)
+		return -1;
 	while ((*Stack)->top != (*Stack)->base) {  ///Go from the top to the base and free the memory for each node.
-		NODE* node = (*Stack)->top->prev;   ///Retain the node previous to the current top node.
+		NODE* node = (*Stack)->top->last;   ///Retain the node previous to the current top node.
+		if (NULL == node)
+			break;
 		free((*Stack)->top);
 		(*Stack)->top = node;   ///The new top is the second to last node in the initial stack.
 	}
@@ -30,47 +34,74 @@ int StDestroy(CC_STACK** Stack)
 
 int StPush(CC_STACK* Stack, int Value)
 {
-	/*CC_UNREFERENCED_PARAMETER(Stack);
-	CC_UNREFERENCED_PARAMETER(Value);*/
+	if (NULL == Stack)
+		return -1;
 
 	NODE* node = (NODE*)malloc(1 * sizeof(NODE));
-	node->value = Value;   ///The vvalue of the new node is assigned.
-	node->next = NULL;   ///The new node is the current top, so the next node is NULL.
-	node->prev = Stack->top;   ///Previous node is the top of the initial stack.
+	if (node == NULL)
+		return -1;
+
+	node->value = Value;   ///The value of the new node is assigned.
+	node->last = Stack->top;   ///Previous node is the top of the initial stack.
+	node->next = NULL;
 	Stack->top = node;   ///The new top is the new node.
+	Stack->size += 1;
 	return 0;
 }
 
 int StPop(CC_STACK* Stack, int* Value)
 {
-	CC_UNREFERENCED_PARAMETER(Stack);
-	CC_UNREFERENCED_PARAMETER(Value);
-	return -1;
+	if (Stack->size == 0 || NULL == Stack)
+		return -1;   ///Empty stack
+
+	NODE* top = Stack->top;   ///Top of the stack
+	*Value = top->value;
+	Stack->top = top->last;
+	Stack->top->next = NULL;   ///The second to last node is now the top of the stack;
+	Stack->size -= 1;
+	free(top);
+	return 0;
 }
 
 int StPeek(CC_STACK* Stack, int* Value)
 {
-	CC_UNREFERENCED_PARAMETER(Stack);
-	CC_UNREFERENCED_PARAMETER(Value);
-	return -1;
+	if (Stack->size == 0 || NULL == Stack)
+		return -1;   ///Empty stack
+
+	*Value = Stack->top->value;
+	return 0;
 }
 
 int StIsEmpty(CC_STACK* Stack)
 {
-	CC_UNREFERENCED_PARAMETER(Stack);
-	return -1;
+	if (NULL == Stack)
+		return -1;
+	return Stack->size == 0;
 }
 
 int StGetCount(CC_STACK* Stack)
 {
-	CC_UNREFERENCED_PARAMETER(Stack);
-	return -1;
+	if (NULL == Stack)
+		return -1;
+
+	return Stack->size;
 }
 
 int StClear(CC_STACK* Stack)
 {
-	CC_UNREFERENCED_PARAMETER(Stack);
-	return -1;
+	if (NULL == Stack)
+		return -1;
+
+	if (Stack->size == 0)
+		return 0;
+
+	while (Stack->top != Stack->base) {
+		NODE* node = Stack->top->last;
+		free(Stack->top);
+		Stack->top = node;
+	}
+	Stack->size = 0;
+	return 0;
 }
 
 int StPushStack(CC_STACK* Stack, CC_STACK* StackToPush)

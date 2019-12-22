@@ -264,7 +264,7 @@ int TestStack()
         goto cleanup;
     }
 
-    if (1 != StIsEmpty(usedStack))
+    if (0 != StIsEmpty(usedStack))
     {
         printf("Invalid answer to StIsEmpty!\n");
         retVal = -1;
