@@ -19,6 +19,7 @@ int main(void)
     return 0;
 }
 
+
 void RunTests()
 {
     /// NOTE: The tests provided here are by no means exhaustive and are only
