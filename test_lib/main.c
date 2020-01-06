@@ -331,14 +331,14 @@ int TestVector()
         goto cleanup;
     }
 
-    retVal = VecInsertTail(usedVector, 10);
+    retVal = VecInsertTail(usedVector, 10);  ///Vector: 10
     if (0 != retVal)
     {
         printf("VecInsertTail failed!\n");
         goto cleanup;
     }
 
-    retVal = VecInsertHead(usedVector, 16);
+    retVal = VecInsertHead(usedVector, 16);  ///Vector: 16 10
     if (0 != retVal)
     {
         printf("VecInsertHead failed!\n");
@@ -352,21 +352,21 @@ int TestVector()
         goto cleanup;
     }
 
-    retVal = VecInsertAfterIndex(usedVector, 0, 20);
+    retVal = VecInsertAfterIndex(usedVector, 0, 20);  ///Vector: 16 20 10
     if (0 != retVal)
     {
         printf("VecInsertAfterIndex failed!\n");
         goto cleanup;
     }
 
-    retVal = VecRemoveByIndex(usedVector, 0);
+    retVal = VecRemoveByIndex(usedVector, 0);  ///Vector: 20 10
     if (0 != retVal)
     {
         printf("VecRemoveByIndex failed!\n");
         goto cleanup;
     }
 
-    retVal = VecGetValueByIndex(usedVector, 0, &foundVal);
+    retVal = VecGetValueByIndex(usedVector, 0, &foundVal);  ///Value: 20
     if (0 != retVal)
     {
         printf("VecGetValueByIndex failed!\n");
@@ -397,6 +397,7 @@ int TestVector()
 cleanup:
     if (NULL != usedVector)
     {
+
         if (0 != VecDestroy(&usedVector))
         {
             printf("VecDestroy failed!\n");

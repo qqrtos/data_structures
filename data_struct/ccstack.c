@@ -3,11 +3,16 @@
 
 int StCreate(CC_STACK** Stack)
 {
-	*Stack = (CC_STACK*)malloc(1 * sizeof(CC_STACK));  ///Allocate space for the stack.
+	CC_STACK* newStack = NULL;
 	NODE* node = (NODE*)malloc(1 * sizeof(NODE));   ///Space for a node.
+	newStack = (CC_STACK*)malloc(1 * sizeof(CC_STACK));
 
-	if (NULL == *Stack || NULL == node)
+	if (NULL == newStack || NULL == node) {
+		free(newStack);
+		free(node);
 		return -1;  ///If there's no more memory available, return.
+	}
+	*Stack = newStack;
 
 	node->next = NULL;   ///The first node has no previous and next node.
 	node->last = NULL;
@@ -39,9 +44,10 @@ int StPush(CC_STACK* Stack, int Value)
 		return -1;
 
 	NODE* node = (NODE*)malloc(1 * sizeof(NODE));
-	if (NULL == node)
+	if (NULL == node) {
+		free(node);
 		return -1;   ///Insufficient memory or smth
-
+	}
 	node->value = Value;   ///The value of the new node is assigned.
 	node->last = Stack->top;   ///Previous node is the top of the initial stack.
 	node->next = NULL;
@@ -93,11 +99,11 @@ int StClear(CC_STACK* Stack)
 		return -1;
 
 	if (0 == Stack->size)
-		return 0;
+		return 0;   ///Empty stack means success.
 
 	while (Stack->top != Stack->base) {
 		NODE* node = Stack->top->last;
-		free(Stack->top);
+		free(Stack->top);   ///Free the memory for every node.
 		Stack->top = node;
 	}
 	Stack->size = 0;
