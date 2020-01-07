@@ -197,19 +197,7 @@ int VecClear(CC_VECTOR* Vector)
 		return -1;
 	}
 
-	CC_VECTOR* vec = Vector;
-
-	int* Array = realloc(vec->Array, 1*sizeof(int));
-
-	if (NULL == Array)
-	{
-		return -1;
-	}
-	
-	vec->Count = 0;
-	vec->Array = Array;
-	Vector = vec;
-
+	Vector->Count = 0;
 	return 0;
 }
 
