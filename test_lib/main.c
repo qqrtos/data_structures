@@ -397,7 +397,25 @@ int TestVector()
 cleanup:
     if (NULL != usedVector)
     {
+        CC_VECTOR* vec1, *vec2;
+        VecCreate(&vec1);
+        VecCreate(&vec2);
+        VecInsertHead(vec1, 16);
+        VecInsertHead(vec1, 1);
+        VecInsertTail(vec1, 5);
+        
+        VecInsertHead(vec2,6);
+        VecInsertHead(vec2, 7);
+        VecInsertTail(vec2, 8);
 
+        VecAppend(vec1, vec2);
+        
+        VecSort(vec1);
+        for (int i = 0; i < vec1->Count; ++i)
+        {
+            printf("%d ", vec1->Array[i]);
+        }
+        printf("\n");
         if (0 != VecDestroy(&usedVector))
         {
             printf("VecDestroy failed!\n");
