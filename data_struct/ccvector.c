@@ -49,7 +49,7 @@ int VecDestroy(CC_VECTOR** Vector)
 
 	*Vector = NULL;
 
-	return -1;
+	return 0;
 }
 
 int VecInsertTail(CC_VECTOR* Vector, int Value)
@@ -81,9 +81,6 @@ int VecInsertTail(CC_VECTOR* Vector, int Value)
 
 int VecInsertHead(CC_VECTOR* Vector, int Value)
 {
-	CC_UNREFERENCED_PARAMETER(Vector);
-	CC_UNREFERENCED_PARAMETER(Value);
-
 	if (NULL == Vector)
 	{
 		return -1;
@@ -143,7 +140,7 @@ int VecInsertAfterIndex(CC_VECTOR* Vector, int Index, int Value)
 	{
 		Vector->Array[i + 1] = Vector->Array[i];
 	}
-	Vector->Array[Index+1] = Value;
+	Vector->Array[Index + 1] = Value;
 	Vector->Count++;
 
 	return 0;
@@ -171,9 +168,6 @@ int VecRemoveByIndex(CC_VECTOR* Vector, int Index)
 
 int VecGetValueByIndex(CC_VECTOR* Vector, int Index, int* Value)
 {
-	CC_UNREFERENCED_PARAMETER(Vector);
-	CC_UNREFERENCED_PARAMETER(Index);
-	CC_UNREFERENCED_PARAMETER(Value);
 	if (NULL == Vector)
 	{
 		return -1;
@@ -198,8 +192,25 @@ int VecGetCount(CC_VECTOR* Vector)
 
 int VecClear(CC_VECTOR* Vector)
 {
-	CC_UNREFERENCED_PARAMETER(Vector);
-	return -1;
+	if (NULL == Vector)
+	{
+		return -1;
+	}
+
+	CC_VECTOR* vec = Vector;
+
+	int* Array = realloc(vec->Array, 1*sizeof(int));
+
+	if (NULL == Array)
+	{
+		return -1;
+	}
+	
+	vec->Count = 0;
+	vec->Array = Array;
+	Vector = vec;
+
+	return 0;
 }
 
 int VecSort(CC_VECTOR* Vector)
@@ -210,7 +221,16 @@ int VecSort(CC_VECTOR* Vector)
 
 int VecAppend(CC_VECTOR* DestVector, CC_VECTOR* SrcVector)
 {
-	CC_UNREFERENCED_PARAMETER(DestVector);
-	CC_UNREFERENCED_PARAMETER(SrcVector);
-	return -1;
+	if (NULL == DestVector || NULL == SrcVector)
+	{
+		return -1;
+	}
+
+	for (int i = 0; i < SrcVector->Count; ++i)
+	{
+		int Value = SrcVector->Array[i];
+		VecInsertTail(DestVector, Value);
+	}
+
+	return 0;
 }
