@@ -201,44 +201,10 @@ int VecClear(CC_VECTOR* Vector)
 	return 0;
 }
 
-int BinarySearch(int* Array, int Item, int Low, int High)
-{
-	///Search for Item in Array and return it's position.
-	if (High <= Low)
-		return (Item < Array[Low]) ? (Low + 1) : Low;
-
-	int mid = (Low + High) / 2;
-	if (Item == Array[mid])
-		return mid + 1;
-
-	if (Item > Array[mid])
-		return BinarySearch(Array, Item, Low, mid - 1);
-	return BinarySearch(Array, Item, mid + 1, High);
-}
-
 int VecSort(CC_VECTOR* Vector)
 {
-	///Binary insertion sort.
-	if (NULL == Vector)
-	{
-		return -1;
-	}
-
-	for (int i = 0; i < Vector->Count; ++i)
-	{
-		int j = i - 1;
-		int item = Vector->Array[i];
-
-		int pos = BinarySearch(Vector->Array, item, 0, j);  ///The elements from 0 to i-1 are alreaady sorted.
-		for (; j >= pos; --j)
-		{
-			Vector->Array[j + 1] = Vector->Array[j];
-		}
-
-		Vector->Array[pos] = item;  ///Insert the element in the corresponding position.
-	}
-
-	return 0;
+	CC_UNREFERENCED_PARAMETER(Vector);
+	return -1;
 }
 
 int VecAppend(CC_VECTOR* DestVector, CC_VECTOR* SrcVector)
