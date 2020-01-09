@@ -112,6 +112,8 @@ int VecInsertHead(CC_VECTOR* Vector, int Value)
 
 int VecInsertAfterIndex(CC_VECTOR* Vector, int Index, int Value)
 {
+	///Doesn't match the tests.
+	/// ??? Their function inserts Value at Index, not after it.
 	if (NULL == Vector)
 	{
 		return -1;
