@@ -2,7 +2,7 @@
 #include "common.h"
 #include "string.h"
 
-#define INITIAL_SIZE    100
+#define INITIAL_SIZE    1
 
 int VecCreate(CC_VECTOR** Vector)
 {
@@ -62,7 +62,7 @@ int VecInsertTail(CC_VECTOR* Vector, int Value)
 	if (Vector->Count >= Vector->Size)
 	{
 		/// REALLOC
-		int* Array = realloc(Vector->Array, Vector->Count * sizeof(int));
+		int* Array = realloc(Vector->Array, (Vector->Count + 1) * sizeof(int));
 		if (NULL == Array)
 		{
 			free(Array);
@@ -70,7 +70,6 @@ int VecInsertTail(CC_VECTOR* Vector, int Value)
 		}
 		Vector->Size = Vector->Count + 1;
 		Vector->Array = Array;
-		return 0;
 	}
 
 	Vector->Array[Vector->Count] = Value;
@@ -89,7 +88,7 @@ int VecInsertHead(CC_VECTOR* Vector, int Value)
 	if (Vector->Count >= Vector->Size)
 	{
 		/// REALLOC
-		int* Array = realloc(Vector->Array, Vector->Count * sizeof(int));
+		int* Array = realloc(Vector->Array, (Vector->Count + 1) * sizeof(int));
 		if (NULL == Array)
 		{
 			free(Array);
@@ -97,7 +96,6 @@ int VecInsertHead(CC_VECTOR* Vector, int Value)
 		}
 		Vector->Size = Vector->Count + 1;
 		Vector->Array = Array;
-		return 0;
 	}
 
 	for (int i = Vector->Count - 1; i >= 0; i--)
@@ -112,8 +110,6 @@ int VecInsertHead(CC_VECTOR* Vector, int Value)
 
 int VecInsertAfterIndex(CC_VECTOR* Vector, int Index, int Value)
 {
-	///Doesn't match the tests.
-	/// ??? Their function inserts Value at Index, not after it.
 	if (NULL == Vector)
 	{
 		return -1;
@@ -122,21 +118,14 @@ int VecInsertAfterIndex(CC_VECTOR* Vector, int Index, int Value)
 	if (Vector->Count >= Vector->Size)
 	{
 		/// REALLOC
-		int* Array = realloc(Vector->Array, Vector->Count * sizeof(int));
+		int* Array = realloc(Vector->Array, (Vector->Count + 1) * sizeof(int));
 		if (NULL == Array)
 		{
 			free(Array);
 			return -1;
 		}
 		Vector->Array = Array;
-		return 0;
 	}
-
-	///For scris de ei.
-	/*for (int i = Vector->Count - 1; i >= Index; i--)
-	{
-		Vector->Array[i + 1] = Vector->Array[i];
-	}*/
 
 	for (int i = Vector->Count - 1; i > Index; --i)
 	{
