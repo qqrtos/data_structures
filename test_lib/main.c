@@ -394,6 +394,13 @@ int TestVector()
 		goto cleanup;
 	}
 
+	VecInsertHead(usedVector, 5);
+	if (VecGetCount(usedVector) != 1)
+	{
+		printf("GRESIT!!!!!!!");
+		goto cleanup;
+	}
+
 cleanup:
 	if (NULL != usedVector)
 	{
@@ -415,6 +422,8 @@ cleanup:
 		{
 			printf("%d ", vec1->Array[i]);
 		}
+		VecDestroy(&vec1);
+		VecDestroy(&vec2);
 		printf("\n");
 		if (0 != VecDestroy(&usedVector))
 		{
