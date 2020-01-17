@@ -1,14 +1,20 @@
 #pragma once
+#define INITIAL_SIZE 31
+
+typedef struct _ELELMENT {
+    int Value;
+    struct _ELEMENT* Next;
+}ELEMENT;
 
 typedef struct _CC_HASH_TABLE {
     // Members
-    int PlaceHolder; // placeholder to be removed when actual implementation is added
+    int Size;
+    ELEMENT** Array;
 } CC_HASH_TABLE;
 
-typedef struct _CC_HASH_TABLE_ITERATOR
-{
-    CC_HASH_TABLE *HashTable; // set by call to HtGetFirstKey
-    // Other Member
+typedef struct _CC_HASH_TABLE_ITERATOR {
+    CC_HASH_TABLE *HashTable;
+    int Index;
 } CC_HASH_TABLE_ITERATOR;
 
 int HtCreate(CC_HASH_TABLE **HashTable);

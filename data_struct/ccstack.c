@@ -26,13 +26,13 @@ int StDestroy(CC_STACK** Stack)
 {
 	if (NULL == *Stack)
 		return -1;
-	if (NULL == (*Stack)->top)
-		return -1;
+	
 	while ((*Stack)->top != (*Stack)->base) {  ///Go from the top to the base and free the memory for each node.
 		NODE* node = (*Stack)->top->last;   ///Retain the node previous to the current top node.
 		free((*Stack)->top);
 		(*Stack)->top = node;   ///The new top is the second to last node in the initial stack.
 	}
+	
 	free((*Stack)->top);
 	free(*Stack);
 	return 0;
