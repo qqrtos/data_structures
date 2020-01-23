@@ -1,9 +1,11 @@
 #pragma once
-#define INITIAL_SIZE 31
+#define INITIAL_SIZE 1
 
-typedef struct _ELELMENT {
+typedef struct _ELEMENT {
     int Value;
-    struct _ELEMENT* Next;
+    char Key[256]; ///Maximum key length
+    char isDeleted; ///Used to keep clusters of elements combined
+    char isAvailable;
 }ELEMENT;
 
 typedef struct _CC_HASH_TABLE {
@@ -14,6 +16,7 @@ typedef struct _CC_HASH_TABLE {
 
 typedef struct _CC_HASH_TABLE_ITERATOR {
     CC_HASH_TABLE *HashTable;
+    char Key[256];
     int Index;
 } CC_HASH_TABLE_ITERATOR;
 

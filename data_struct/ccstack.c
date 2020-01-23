@@ -28,7 +28,7 @@ int StDestroy(CC_STACK** Stack)
 		return -1;
 	
 	while ((*Stack)->top != (*Stack)->base) {  ///Go from the top to the base and free the memory for each node.
-		NODE* node = (*Stack)->top->last;   ///Retain the node previous to the current top node.
+		NODE* node = (*Stack)->top->last;   ///Retain the node previous to the current top node. //????
 		free((*Stack)->top);
 		(*Stack)->top = node;   ///The new top is the second to last node in the initial stack.
 	}
@@ -102,7 +102,7 @@ int StClear(CC_STACK* Stack)
 		return 0;   ///Empty stack means success.
 
 	while (Stack->top != Stack->base) {
-		NODE* node = Stack->top->last;
+		NODE* node = Stack->top->last; //?????
 		free(Stack->top);   ///Free the memory for every node.
 		Stack->top = node;
 	}
