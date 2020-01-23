@@ -238,21 +238,38 @@ int TestHashTable()
         retVal = -1;
         goto cleanup;
     }
+
     if (1 != HtHasKey(usedTable, "john"))
     {
         printf("Invalid answer to HtHasKey!\n");
         retVal = -1;
         goto cleanup;
     }
+
     if (1 != HtHasKey(usedTable, "ana"))
     {
         printf("Invalid answer to HtHasKey!\n");
         retVal = -1;
         goto cleanup;
     }
+
     if (1 != HtHasKey(usedTable, "maria"))
     {
         printf("Invalid answer to HtHasKey!\n");
+        retVal = -1;
+        goto cleanup;
+    }
+
+    if (0 != HtRemoveKey(usedTable, "maria"))
+    {
+        printf("Remove has failed!\n");
+        retVal = -1;
+        goto cleanup;
+    }
+
+    if (0 != HtHasKey(usedTable, "maria"))
+    {
+        printf("Key wasn't removed properly!\n");
         retVal = -1;
         goto cleanup;
     }

@@ -270,7 +270,7 @@ int HtGetKeyValue(CC_HASH_TABLE* HashTable, char* Key, int* Value)
 	///Search after index.
 	for (int i = indx; i < HashTable->Size; ++i)
 	{
-		if (strcmp(HashTable->Array[i]->Key, Key) == 0) /// Key was found.
+		if (0 == HashTable->Array[i]->isDeleted && strcmp(HashTable->Array[i]->Key, Key) == 0) /// Key was found.
 		{
 			*Value = HashTable->Array[i]->Value;
 			return 0;
@@ -280,7 +280,7 @@ int HtGetKeyValue(CC_HASH_TABLE* HashTable, char* Key, int* Value)
 	///Search before index.
 	for (int i = 0; i < indx; ++i)
 	{
-		if (strcmp(HashTable->Array[i]->Key, Key) == 0)
+		if (0 == HashTable->Array[i]->isDeleted && strcmp(HashTable->Array[i]->Key, Key) == 0)
 		{
 			*Value = HashTable->Array[i]->Value;
 			return 0;
@@ -292,8 +292,36 @@ int HtGetKeyValue(CC_HASH_TABLE* HashTable, char* Key, int* Value)
 
 int HtRemoveKey(CC_HASH_TABLE* HashTable, char* Key)
 {
-	CC_UNREFERENCED_PARAMETER(HashTable);
-	CC_UNREFERENCED_PARAMETER(Key);
+	if (NULL == HashTable)
+	{
+		return -1;
+	}
+
+	if (NULL == Key)
+	{
+		return -1;
+	}
+
+	int Index = GetIndexFromKey(HashTable, Key);
+
+	for (int i = Index; i < HashTable->Size; ++i)
+	{
+		if (strcmp(HashTable->Array[i]->Key, Key) == 0)
+		{
+			HashTable->Array[i]->isDeleted = 1;
+			return 0;
+		}
+	}
+
+	for (int i = 0; i < Index; ++i)
+	{
+		if (strcmp(HashTable->Array[i]->Key, Key) == 0)
+		{
+			HashTable->Array[i]->isDeleted = 1;
+			return 0;
+		}
+	}
+
 	return -1;
 }
 
@@ -312,7 +340,7 @@ int HtHasKey(CC_HASH_TABLE* HashTable, char* Key)
 
 	for (int i = 0; i < HashTable->Size; ++i)
 	{
-		if (strcmp(HashTable->Array[i]->Key, Key) == 0)
+		if (0 == HashTable->Array[i]->isDeleted && strcmp(HashTable->Array[i]->Key, Key) == 0)
 		{
 			return 1;
 		}
