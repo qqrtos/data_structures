@@ -111,7 +111,7 @@ int HtRealloc(CC_HASH_TABLE** HashTable)
 	newHash->Array = Array;
 
 	///Allocate the new elements.
-	for (int i = (*HashTable)->Size; i < Size; ++i)
+	for (int i = INITIAL_SIZE; i < Size; ++i)
 	{
 		newHash->Array[i] = (ELEMENT*)malloc(1 * sizeof(ELEMENT));
 
@@ -299,7 +299,7 @@ int HtRemoveKey(CC_HASH_TABLE* HashTable, char* Key)
 
 int HtHasKey(CC_HASH_TABLE* HashTable, char* Key)
 {
-	///Check whether a given key is in the hash table.
+	///Check whether
 	if (NULL == HashTable)
 	{
 		return -1;
