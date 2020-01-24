@@ -1,5 +1,5 @@
 #pragma once
-#define INITIAL_SIZE 2003
+#define INITIAL_SIZE 1
 
 typedef struct _ELEMENT {
     int Value;
@@ -15,9 +15,9 @@ typedef struct _CC_HASH_TABLE {
 } CC_HASH_TABLE;
 
 typedef struct _CC_HASH_TABLE_ITERATOR {
-    CC_HASH_TABLE *HashTable;
-    char Key[256];
+    CC_HASH_TABLE* HashTable;
     int Index;
+    ELEMENT* Current;
 } CC_HASH_TABLE_ITERATOR;
 
 int HtCreate(CC_HASH_TABLE **HashTable);

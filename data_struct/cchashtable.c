@@ -40,12 +40,13 @@ int NextPrime(CC_HASH_TABLE* HashTable)
 ///Returns an index in the hash table from a string of characters. Hash function.
 int GetIndexFromKey(CC_HASH_TABLE* HashTable, char* Key)
 {
-	unsigned long hash = 5381;
-	int c;
+	unsigned long hash = 401;
 
-	while (c = *Key++)
-		hash = ((hash << 5) + hash) ^ c;
-
+	while (*Key != '\0')
+	{
+		hash = ((hash << 4) + (int)(*Key)) % HashTable->Size;
+		++Key;
+	}
 	return hash % HashTable->Size;
 }
 
@@ -61,15 +62,15 @@ int HtInsert(CC_HASH_TABLE* HashTable, int index, ELEMENT* entry)
 	///Insert at first available spot.
 	for (int i = index; i < HashTable->Size; ++i)
 	{
-		if (1 == HashTable->Array[index]->isAvailable)
+		if (1 == HashTable->Array[i]->isAvailable)
 		{
-			HashTable->Array[index] = entry;
+			HashTable->Array[i] = entry;
 			return 0;
 		}
-		else if (1 == HashTable->Array[index]->isDeleted)
+		else if (1 == HashTable->Array[i]->isDeleted)
 		{
-			free(HashTable->Array[index]);
-			HashTable->Array[index] = entry;
+			free(HashTable->Array[i]);
+			HashTable->Array[i] = entry;
 			return 0;
 		}
 	}
@@ -77,15 +78,15 @@ int HtInsert(CC_HASH_TABLE* HashTable, int index, ELEMENT* entry)
 	///A spot wasn't found after index, so search for it before.
 	for (int i = 0; i < index; ++i)
 	{
-		if (1 == HashTable->Array[index]->isAvailable)
+		if (1 == HashTable->Array[i]->isAvailable)
 		{
-			HashTable->Array[index] = entry;
+			HashTable->Array[i] = entry;
 			return 0;
 		}
-		else if (1 == HashTable->Array[index]->isDeleted)
+		else if (1 == HashTable->Array[i]->isDeleted)
 		{
-			free(HashTable->Array[index]);
-			HashTable->Array[index] = entry;
+			free(HashTable->Array[i]);
+			HashTable->Array[i] = entry;
 			return 0;
 		}
 	}
@@ -96,6 +97,16 @@ int HtInsert(CC_HASH_TABLE* HashTable, int index, ELEMENT* entry)
 
 int HtRealloc(CC_HASH_TABLE** HashTable)
 {
+	if (NULL == HashTable)
+	{
+		return -1;
+	}
+
+	if (NULL == (*HashTable)->Array)
+	{
+		return -1;
+	}
+
 	///Hash table is full, so resize it.
 	CC_HASH_TABLE* newHash;
 	HtCreate(&newHash);
@@ -339,7 +350,17 @@ int HtHasKey(CC_HASH_TABLE* HashTable, char* Key)
 		return -1;
 	}
 
-	for (int i = 0; i < HashTable->Size; ++i)
+	int Index = GetIndexFromKey(HashTable, Key);
+
+	for (int i = Index; i < HashTable->Size; ++i)
+	{
+		if (0 == HashTable->Array[i]->isDeleted && strcmp(HashTable->Array[i]->Key, Key) == 0)
+		{
+			return 1;
+		}
+	}
+
+	for (int i = 0; i < Index; ++i)
 	{
 		if (0 == HashTable->Array[i]->isDeleted && strcmp(HashTable->Array[i]->Key, Key) == 0)
 		{
@@ -358,10 +379,12 @@ int HtGetFirstKey(CC_HASH_TABLE* HashTable, CC_HASH_TABLE_ITERATOR** Iterator, c
 	{
 		return -1;
 	}
+
 	if (NULL == Iterator)
 	{
 		return -1;
 	}
+
 	if (NULL == Key)
 	{
 		return -1;
@@ -377,16 +400,17 @@ int HtGetFirstKey(CC_HASH_TABLE* HashTable, CC_HASH_TABLE_ITERATOR** Iterator, c
 
 	iterator->HashTable = HashTable;
 	iterator->Index = -1;
+	iterator->Current = NULL;
 
 	*Iterator = iterator;
 
 	// FIND THE FIRST KEY AND SET Key
 	for (int i = 0; i < HashTable->Size; ++i)
 	{
-		if (1 == HashTable->Array[i]->isAvailable && 0 == HashTable->Array[i]->isDeleted)
+		if (0 == HashTable->Array[i]->isAvailable && 0 == HashTable->Array[i]->isDeleted)
 		{
+			(*Iterator)->Current = HashTable->Array[i];
 			(*Iterator)->Index = i;
-			strcpy_s((*Iterator)->Key, sizeof(HashTable->Array[i]->Key), HashTable->Array[i]->Key);
 			strcpy_s(*Key, sizeof(HashTable->Array[i]->Key), HashTable->Array[i]->Key);
 			return 0;
 		}
@@ -397,21 +421,68 @@ int HtGetFirstKey(CC_HASH_TABLE* HashTable, CC_HASH_TABLE_ITERATOR** Iterator, c
 
 int HtGetNextKey(CC_HASH_TABLE_ITERATOR* Iterator, char** Key)
 {
-	CC_UNREFERENCED_PARAMETER(Key);
-	CC_UNREFERENCED_PARAMETER(Iterator);
-	return -1;
+	if (NULL == Iterator)
+	{
+		return -1;
+	}
+
+	for (int i = Iterator->Index + 1; i < Iterator->HashTable->Size; ++i)
+	{
+		if (0 == Iterator->HashTable->Array[i]->isAvailable && 0 == Iterator->HashTable->Array[i]->isDeleted)
+		{
+			Iterator->Current = Iterator->HashTable->Array[i];
+			Iterator->Index = i;
+			strcpy_s(*Key, sizeof(Iterator->HashTable->Array[i]->Key), Iterator->HashTable->Array[i]->Key);
+			return 0;
+		}
+	}
+
+	for (int i = 0; i < Iterator->Index; ++i)
+	{
+		if (0 == Iterator->HashTable->Array[i]->isAvailable && 0 == Iterator->HashTable->Array[i]->isDeleted)
+		{
+			Iterator->Current = Iterator->HashTable->Array[i];
+			Iterator->Index = i;
+			strcpy_s(*Key, sizeof(Iterator->HashTable->Array[i]->Key), Iterator->HashTable->Array[i]->Key);
+			return 0;
+		}
+	}
+
+	return -2;
 }
 
 int HtReleaseIterator(CC_HASH_TABLE_ITERATOR** Iterator)
 {
-	CC_UNREFERENCED_PARAMETER(Iterator);
-	return -1;
+	if (NULL == *Iterator)
+	{
+		return -1;
+	}
+
+	(*Iterator)->Current = NULL;
+	(*Iterator)->HashTable = NULL;
+	(*Iterator)->Index = -1;
+
+	free(*Iterator);
+
+	*Iterator = NULL;
+
+	return 0;
 }
 
 int HtClear(CC_HASH_TABLE* HashTable)
 {
-	CC_UNREFERENCED_PARAMETER(HashTable);
-	return -1;
+	if (NULL == HashTable)
+	{
+		return -1;
+	}
+
+	///Mark all elements as deleted.
+	for (int i = 0; i < HashTable->Size; ++i)
+	{
+		HashTable->Array[i]->isDeleted = 1;
+	}
+
+	return 0;
 }
 
 int HtGetKeyCount(CC_HASH_TABLE* HashTable)

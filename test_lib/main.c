@@ -211,21 +211,7 @@ int TestHashTable()
         goto cleanup;
     }
     
-    retVal = HtSetKeyValue(usedTable, "john", 15);
-    if (0 != retVal)
-    {
-        printf("HtSetKeyValue failed!\n");
-        goto cleanup;
-    }
-    
     retVal = HtSetKeyValue(usedTable, "maria", 10);
-    if (0 != retVal)
-    {
-        printf("HtSetKeyValue failed!\n");
-        goto cleanup;
-    }
-    
-    retVal = HtSetKeyValue(usedTable, "ana", 1);
     if (0 != retVal)
     {
         printf("HtSetKeyValue failed!\n");
@@ -233,20 +219,6 @@ int TestHashTable()
     }
 
     if (1 != HtHasKey(usedTable, "mere"))
-    {
-        printf("Invalid answer to HtHasKey!\n");
-        retVal = -1;
-        goto cleanup;
-    }
-
-    if (1 != HtHasKey(usedTable, "john"))
-    {
-        printf("Invalid answer to HtHasKey!\n");
-        retVal = -1;
-        goto cleanup;
-    }
-
-    if (1 != HtHasKey(usedTable, "ana"))
     {
         printf("Invalid answer to HtHasKey!\n");
         retVal = -1;
@@ -284,6 +256,34 @@ int TestHashTable()
     if (foundVal != 20)
     {
         printf("Invalid value after get!\n");
+        retVal = -1;
+        goto cleanup;
+    }
+
+    retVal = HtSetKeyValue(usedTable, "john", 10);
+    if (0 != retVal)
+    {
+        printf("HtSetKeyValue failed!\n");
+        goto cleanup;
+    }
+
+    if (1 != HtHasKey(usedTable, "john"))
+    {
+        printf("Invalid answer to HtHasKey!\n");
+        retVal = -1;
+        goto cleanup;
+    }
+
+    retVal = HtSetKeyValue(usedTable, "curse", 1);
+    if (0 != retVal)
+    {
+        printf("HtSetKeyValue failed!\n");
+        goto cleanup;
+    }
+
+    if (1 != HtHasKey(usedTable, "curse"))
+    {
+        printf("Invalid answer to HtHasKey!\n");
         retVal = -1;
         goto cleanup;
     }
