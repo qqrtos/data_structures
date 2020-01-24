@@ -33,18 +33,19 @@ int NextPrime(CC_HASH_TABLE* HashTable)
 			return i;
 		}
 	}
-	return -1;
+
+	return -1; ///Error finding the next prime.
 }
 
 ///Returns an index in the hash table from a string of characters. Hash function.
 int GetIndexFromKey(CC_HASH_TABLE* HashTable, char* Key)
 {
-	unsigned long hash = 401;
+	unsigned long hash = 5381;
+	int c;
 
-	for (unsigned int i = 0; i < strlen(Key); ++i)
-	{
-		hash = ((hash << 4) + (int)(Key[i])) % HashTable->Size;
-	}
+	while (c = *Key++)
+		hash = ((hash << 5) + hash) ^ c;
+
 	return hash % HashTable->Size;
 }
 
