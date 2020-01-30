@@ -4,7 +4,8 @@
 
 typedef struct _CC_HEAP{
     // Members
-    int PlaceHolder; // placeholder to be removed when actual implementation is added
+    int* Array;
+    int Size;
 } CC_HEAP;
 
 // HpCreateMaxHeap and HpCreateMinHeap should create a max heap or a min heap,

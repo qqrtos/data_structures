@@ -136,13 +136,24 @@ int TestHeap()
     int retVal = -1;
     int foundVal = -1;
     CC_HEAP* usedHeap = NULL;
+    CC_VECTOR* usedVector = NULL;
+    VecCreate(&usedVector);
+    VecInsertTail(usedVector, 4); VecInsertTail(usedVector, 1); VecInsertTail(usedVector, 3);
+    VecInsertTail(usedVector, 2); VecInsertTail(usedVector, 16); VecInsertTail(usedVector, 9);
+    VecInsertTail(usedVector, 10); VecInsertTail(usedVector, 14); VecInsertTail(usedVector, 8); VecInsertTail(usedVector, 7);
 
-    retVal = HpCreateMinHeap(&usedHeap, NULL);
+    retVal = HpCreateMinHeap(&usedHeap, usedVector);
     if (0 != retVal)
     {
         printf("HpCreateMinHeap failed!\n");
         goto cleanup;
     }
+    printf("Initial Heap:  ");
+    for (int i = 0; i < usedHeap->Size; ++i)
+    {
+        printf("%d ", usedHeap->Array[i]);
+    }
+    printf("\n");
 
     retVal = HpInsert(usedHeap, 20);
     if (0 != retVal)
