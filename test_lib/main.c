@@ -287,6 +287,20 @@ int TestHashTable()
         retVal = -1;
         goto cleanup;
     }
+    
+    retVal = HtSetKeyValue(usedTable, "marian", 3);
+    if (0 != retVal)
+    {
+        printf("HtSetKeyValue failed!\n");
+        goto cleanup;
+    }
+
+    if (1 != HtHasKey(usedTable, "marian"))
+    {
+        printf("Invalid answer to HtHasKey!\n");
+        retVal = -1;
+        goto cleanup;
+    }
 
 cleanup:
     if (NULL != usedTable)

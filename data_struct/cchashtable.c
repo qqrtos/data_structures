@@ -282,6 +282,10 @@ int HtGetKeyValue(CC_HASH_TABLE* HashTable, char* Key, int* Value)
 	///Search after index.
 	for (int i = indx; i < HashTable->Size; ++i)
 	{
+		if (1 == HashTable->Array[i]->isAvailable)
+		{
+			return -1;
+		}
 		if (0 == HashTable->Array[i]->isDeleted && strcmp(HashTable->Array[i]->Key, Key) == 0) /// Key was found.
 		{
 			*Value = HashTable->Array[i]->Value;
@@ -292,6 +296,10 @@ int HtGetKeyValue(CC_HASH_TABLE* HashTable, char* Key, int* Value)
 	///Search before index.
 	for (int i = 0; i < indx; ++i)
 	{
+		if (1 == HashTable->Array[i]->isAvailable)
+		{
+			return -1;
+		}
 		if (0 == HashTable->Array[i]->isDeleted && strcmp(HashTable->Array[i]->Key, Key) == 0)
 		{
 			*Value = HashTable->Array[i]->Value;
