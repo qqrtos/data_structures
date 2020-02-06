@@ -136,24 +136,24 @@ int TestHeap()
     int retVal = -1;
     int foundVal = -1;
     CC_HEAP* usedHeap = NULL;
-    CC_VECTOR* usedVector = NULL;
+    /*CC_VECTOR* usedVector = NULL;
     VecCreate(&usedVector);
     VecInsertTail(usedVector, 4); VecInsertTail(usedVector, 1); VecInsertTail(usedVector, 3);
     VecInsertTail(usedVector, 2); VecInsertTail(usedVector, 16); VecInsertTail(usedVector, 9);
-    VecInsertTail(usedVector, 10); VecInsertTail(usedVector, 14); VecInsertTail(usedVector, 8); VecInsertTail(usedVector, 7);
+    VecInsertTail(usedVector, 10); VecInsertTail(usedVector, 14); VecInsertTail(usedVector, 8); VecInsertTail(usedVector, 7);*/
 
-    retVal = HpCreateMinHeap(&usedHeap, usedVector);
+    retVal = HpCreateMinHeap(&usedHeap, NULL);
     if (0 != retVal)
     {
         printf("HpCreateMinHeap failed!\n");
         goto cleanup;
     }
-    printf("Initial Heap:  ");
+    /*printf("Initial Heap:  ");
     for (int i = 0; i < usedHeap->Size; ++i)
     {
         printf("%d ", usedHeap->Array[i]);
     }
-    printf("\n");
+    printf("\n");*/
 
     retVal = HpInsert(usedHeap, 20);
     if (0 != retVal)
@@ -161,15 +161,45 @@ int TestHeap()
         printf("HpInsert failed!\n");
         goto cleanup;
     }
-
     retVal = HpInsert(usedHeap, 10);
     if (0 != retVal)
     {
         printf("HpInsert failed!\n");
         goto cleanup;
     }
+    retVal = HpInsert(usedHeap, 6);
+    if (0 != retVal)
+    {
+        printf("HpInsert failed!\n");
+        goto cleanup;
+    }
+    retVal = HpInsert(usedHeap, 9);
+    if (0 != retVal)
+    {
+        printf("HpInsert failed!\n");
+        goto cleanup;
+    }
+    retVal = HpInsert(usedHeap, 1);
+    if (0 != retVal)
+    {
+        printf("HpInsert failed!\n");
+        goto cleanup;
+    }
+    retVal = HpInsert(usedHeap, 3);
+    if (0 != retVal)
+    {
+        printf("HpInsert failed!\n");
+        goto cleanup;
+    }
 
-    if (2 != HpGetElementCount(usedHeap))
+    printf("Final Heap:  ");
+    for (int i = 0; i < usedHeap->Size; ++i)
+    {
+        printf("%d ", usedHeap->Array[i]);
+    }
+    printf("\n");
+
+    if (6 != HpGetElementCount(usedHeap))
     {
         printf("Invalid element count!\n");
         retVal = -1;
@@ -183,9 +213,9 @@ int TestHeap()
         goto cleanup;
     }
 
-    if (10 != foundVal)
+    if (1 != foundVal)
     {
-        printf("Invalid minimum value returned!");
+        printf("Invalid minimum value returned!\n");
         retVal = -1;
         goto cleanup;
     }

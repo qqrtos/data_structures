@@ -1,5 +1,6 @@
 #include "ccheap.h"
 #include "common.h"
+#include <string.h>
 
 ///Swaps two integers
 void swap(int* x, int* y)
@@ -63,7 +64,7 @@ void HpCorrectMinHeapError(CC_HEAP* MinHeap, int Index)
 {
 	int left = HpLeft(Index);
 	int right = HpRight(Index);
-	int smallest = max(left, right);
+	int smallest = min(left, right);
 
 	if (left < MinHeap->Size && MinHeap->Array[left] < MinHeap->Array[Index])
 	{
@@ -86,6 +87,28 @@ void HpCorrectMinHeapError(CC_HEAP* MinHeap, int Index)
 	}
 }
 
+///Correct a single error made by inserting an element.
+void HpCorrectInsertionError(CC_HEAP* Heap, int Index)
+{
+	int Parent = HpParent(Index);
+
+	if (Parent >= 0)
+	{
+		///Swap if the inserted element is larger than the parent (max heap)
+		if (strcmp(Heap->Type, "max") == 0 && Heap->Array[Index] > Heap->Array[Parent])
+		{
+			swap(&Heap->Array[Index], &Heap->Array[Parent]);
+			HpCorrectInsertionError(Heap, Parent); ///Recursively go up the heap and check the property
+		}
+		///Swap if inserted element is lower than parent (min heap)
+		else if (Heap->Array[Index] < Heap->Array[Parent])
+		{
+			swap(&Heap->Array[Index], &Heap->Array[Parent]);
+			HpCorrectInsertionError(Heap, Parent); ///Recursively go up the heap and check the property
+		}
+	}
+}
+
 int HpCreateMaxHeap(CC_HEAP** MaxHeap, CC_VECTOR* InitialElements)
 {
 	CC_HEAP* newHeap = (CC_HEAP*)malloc(1 * sizeof(CC_HEAP));
@@ -93,6 +116,15 @@ int HpCreateMaxHeap(CC_HEAP** MaxHeap, CC_VECTOR* InitialElements)
 	{
 		return -1; ///Not enough memory.
 	}
+	char* Type = (char*)malloc(4 * sizeof(char));
+	char* maxType = "max";
+
+	if (NULL == Type)
+	{
+		return -1;
+	}
+	strcpy_s(Type, 4 * sizeof(char), maxType);
+	newHeap->Type = Type;
 
 	if (NULL != InitialElements)
 	{
@@ -125,6 +157,15 @@ int HpCreateMinHeap(CC_HEAP** MinHeap, CC_VECTOR* InitialElements)
 	{
 		return -1;
 	}
+	char* Type = (char*)malloc(4 * sizeof(char));
+	char* minType = "min";
+
+	if (NULL == Type)
+	{
+		return -1;
+	}
+	strcpy_s(Type, 4 * sizeof(char), minType);
+	newHeap->Type = Type;
 
 	if (NULL != InitialElements)
 	{
@@ -163,6 +204,7 @@ int HpDestroy(CC_HEAP** Heap)
 	{
 		free(newHeap->Array);
 	}
+	free(newHeap->Type);
 
 	free(newHeap);
 
@@ -173,9 +215,50 @@ int HpDestroy(CC_HEAP** Heap)
 
 int HpInsert(CC_HEAP* Heap, int Value)
 {
-	CC_UNREFERENCED_PARAMETER(Heap);
-	CC_UNREFERENCED_PARAMETER(Value);
-	return -1;
+	if (NULL == Heap)
+	{
+		return -1;
+	}
+
+	///Empty heap => add the first element as root.
+	if (NULL == Heap->Array)
+	{
+		int* Array = (int*)realloc(Heap->Array, 1 * sizeof(int));
+
+		if (NULL == Array)
+		{
+			return -1;
+		}
+		Array[0] = Value;
+
+		Heap->Array = Array;
+		Heap->Size += 1;
+	}
+	else ///Heap already contains some elements => insert Value at a valid position
+	{
+		int* Array = (int*)realloc(Heap->Array, (Heap->Size + 1) * sizeof(int));
+
+		if (NULL == Array)
+		{
+			return -1;
+		}
+		Heap->Size += 1;
+		Array[Heap->Size - 1] = Value;
+
+		Heap->Array = Array;
+
+		///Correct heap error.
+		if (strcmp(Heap->Type, "max") == 0)
+		{
+			HpCorrectInsertionError(Heap, Heap->Size - 1); ///Correct the possible errors made at inserting.
+		}
+		else
+		{
+			HpCorrectInsertionError(Heap, Heap->Size - 1);
+		}
+	}
+
+	return 0;
 }
 
 int HpRemove(CC_HEAP* Heap, int Value)

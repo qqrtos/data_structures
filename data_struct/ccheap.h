@@ -6,6 +6,7 @@ typedef struct _CC_HEAP{
     // Members
     int* Array;
     int Size;
+    char* Type;
 } CC_HEAP;
 
 // HpCreateMaxHeap and HpCreateMinHeap should create a max heap or a min heap,
