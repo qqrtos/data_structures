@@ -152,8 +152,23 @@ int HpCreateMinHeap(CC_HEAP** MinHeap, CC_VECTOR* InitialElements)
 
 int HpDestroy(CC_HEAP** Heap)
 {
-	CC_UNREFERENCED_PARAMETER(Heap);
-	return -1;
+	if (NULL == *Heap)
+	{
+		return -1;
+	}
+
+	CC_HEAP* newHeap = *Heap;
+
+	if (NULL != newHeap->Array)
+	{
+		free(newHeap->Array);
+	}
+
+	free(newHeap);
+
+	*Heap = NULL;
+
+	return 0;
 }
 
 int HpInsert(CC_HEAP* Heap, int Value)
@@ -172,9 +187,19 @@ int HpRemove(CC_HEAP* Heap, int Value)
 
 int HpGetExtreme(CC_HEAP* Heap, int* ExtremeValue)
 {
-	CC_UNREFERENCED_PARAMETER(Heap);
-	CC_UNREFERENCED_PARAMETER(ExtremeValue);
-	return -1;
+	if (NULL == Heap)
+	{
+		return -1;
+	}
+
+	if (NULL == Heap->Array)
+	{
+		return -1;
+	}
+
+	*ExtremeValue = Heap->Array[0];
+
+	return 0;
 }
 
 int HpPopExtreme(CC_HEAP* Heap, int* ExtremeValue)
@@ -186,8 +211,12 @@ int HpPopExtreme(CC_HEAP* Heap, int* ExtremeValue)
 
 int HpGetElementCount(CC_HEAP* Heap)
 {
-	CC_UNREFERENCED_PARAMETER(Heap);
-	return -1;
+	if (NULL == Heap)
+	{
+		return -1;
+	}
+
+	return Heap->Size;
 }
 
 int HpSortToVector(CC_HEAP* Heap, CC_VECTOR* SortedVector)
