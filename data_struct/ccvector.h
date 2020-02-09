@@ -1,4 +1,5 @@
 #pragma once
+#define INITIAL_VECTOR_SIZE 250
 
 typedef struct _CC_VECTOR {
     int *Array;

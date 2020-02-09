@@ -2,7 +2,6 @@
 #include "common.h"
 #include "string.h"
 
-#define INITIAL_SIZE    2
 
 int VecCreate(CC_VECTOR** Vector)
 {
@@ -22,8 +21,8 @@ int VecCreate(CC_VECTOR** Vector)
 	memset(vec, 0, sizeof(*vec));
 
 	vec->Count = 0;
-	vec->Size = INITIAL_SIZE;
-	vec->Array = (int*)malloc(sizeof(int) * INITIAL_SIZE);
+	vec->Size = INITIAL_VECTOR_SIZE;
+	vec->Array = (int*)malloc(sizeof(int) * INITIAL_VECTOR_SIZE);
 	if (NULL == vec->Array)
 	{
 		free(vec);
@@ -62,13 +61,13 @@ int VecInsertTail(CC_VECTOR* Vector, int Value)
 	if (Vector->Count >= Vector->Size)
 	{
 		/// REALLOC
-		int* Array = realloc(Vector->Array, (INITIAL_SIZE+Vector->Count) * sizeof(int));
+		int* Array = realloc(Vector->Array, (INITIAL_VECTOR_SIZE + Vector->Count) * sizeof(int));
 		if (NULL == Array)
 		{
 			free(Array);
 			return -1;
 		}
-		Vector->Size = INITIAL_SIZE+Vector->Count;
+		Vector->Size = INITIAL_VECTOR_SIZE + Vector->Count;
 		Vector->Array = Array;
 	}
 
@@ -88,13 +87,13 @@ int VecInsertHead(CC_VECTOR* Vector, int Value)
 	if (Vector->Count >= Vector->Size)
 	{
 		/// REALLOC
-		int* Array = realloc(Vector->Array, (INITIAL_SIZE+Vector->Count) * sizeof(int));
+		int* Array = realloc(Vector->Array, (INITIAL_VECTOR_SIZE + Vector->Count) * sizeof(int));
 		if (NULL == Array)
 		{
 			free(Array);
 			return -1;
 		}
-		Vector->Size = INITIAL_SIZE+Vector->Count;
+		Vector->Size = INITIAL_VECTOR_SIZE + Vector->Count;
 		Vector->Array = Array;
 	}
 
@@ -118,14 +117,14 @@ int VecInsertAfterIndex(CC_VECTOR* Vector, int Index, int Value)
 	if (Vector->Count >= Vector->Size)
 	{
 		/// REALLOC
-		int* Array = realloc(Vector->Array, (INITIAL_SIZE+Vector->Count) * sizeof(int));
+		int* Array = realloc(Vector->Array, (INITIAL_VECTOR_SIZE + Vector->Count) * sizeof(int));
 		if (NULL == Array)
 		{
 			free(Array);
 			return -1;
 		}
 
-		Vector->Size = INITIAL_SIZE + Vector->Count;
+		Vector->Size = INITIAL_VECTOR_SIZE + Vector->Count;
 		Vector->Array = Array;
 	}
 
