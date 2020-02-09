@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ccvector.h"
-#define INITIAL_HEAP_SIZE 1
+#define INITIAL_HEAP_SIZE 250
 
 typedef struct _CC_HEAP{
     // Members

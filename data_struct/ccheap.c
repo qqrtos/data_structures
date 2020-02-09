@@ -101,7 +101,7 @@ void HpCorrectInsertionError(CC_HEAP* Heap, int Index)
 			HpCorrectInsertionError(Heap, Parent); ///Recursively go up the heap and check the property
 		}
 		///Swap if inserted element is lower than parent (min heap)
-		else if (Heap->Array[Index] < Heap->Array[Parent])
+		else if (strcmp(Heap->Type,"min")==0 && Heap->Array[Index] < Heap->Array[Parent])
 		{
 			swap(&Heap->Array[Index], &Heap->Array[Parent]);
 			HpCorrectInsertionError(Heap, Parent); ///Recursively go up the heap and check the property
@@ -329,9 +329,53 @@ int HpGetElementCount(CC_HEAP* Heap)
 	return Heap->Count;
 }
 
+///DESTRUCTIVE increasing order sorting.
 int HpSortToVector(CC_HEAP* Heap, CC_VECTOR* SortedVector)
 {
-	CC_UNREFERENCED_PARAMETER(Heap);
-	CC_UNREFERENCED_PARAMETER(SortedVector);
-	return -1;
+	if (NULL == Heap)
+	{
+		return -1;
+	}
+
+	if (NULL == SortedVector)
+	{
+		return -1;
+	}
+
+	///Prepare sorted vector.
+	int* Array = (int*)malloc(Heap->Size * sizeof(int));
+	if (NULL == Array)
+	{
+		return -1;
+	}
+	SortedVector->Array = Array;
+	SortedVector->Count = 0;
+	SortedVector->Size = Heap->Size;
+
+	if (strcmp(Heap->Type, "min") == 0)
+	{
+		///Root is always minimum, so put it at then end of the vector, remove it from heap + correct possible errors.
+		while (Heap->Count > 0)
+		{
+			swap(&Heap->Array[0], &Heap->Array[Heap->Count - 1]);
+			VecInsertTail(SortedVector, Heap->Array[Heap->Count - 1]);
+			Heap->Count -= 1;
+			Heap->Size -= 1;
+			HpCorrectMinHeapError(Heap, 0);
+		}
+	}
+	else 
+	{
+		///To sort a max heap in increasing order, we insert the root as a head each time.
+		while (Heap->Count > 0)
+		{
+			swap(&Heap->Array[0], &Heap->Array[Heap->Count - 1]);
+			VecInsertHead(SortedVector, Heap->Array[Heap->Count - 1]);
+			Heap->Count -= 1;
+			Heap->Size -= 1;
+			HpCorrectMaxHeapError(Heap, 0);
+		}
+	}
+	
+	return 0;
 }
