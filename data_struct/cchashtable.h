@@ -1,5 +1,5 @@
 #pragma once
-#define INITIAL_SIZE 1
+#define INITIAL_HASHTABLE_SIZE 311
 
 typedef struct _ELEMENT {
     int Value;

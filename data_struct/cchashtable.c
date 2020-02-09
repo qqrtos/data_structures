@@ -123,7 +123,7 @@ int HtRealloc(CC_HASH_TABLE** HashTable)
 	newHash->Array = Array;
 
 	///Allocate the new elements.
-	for (int i = INITIAL_SIZE; i < Size; ++i)
+	for (int i = INITIAL_HASHTABLE_SIZE; i < Size; ++i)
 	{
 		newHash->Array[i] = (ELEMENT*)malloc(1 * sizeof(ELEMENT));
 
@@ -171,8 +171,8 @@ int HtCreate(CC_HASH_TABLE** HashTable)
 		return -1;
 	}
 
-	newHash->Size = INITIAL_SIZE;
-	newHash->Array = (ELEMENT**)malloc(INITIAL_SIZE * sizeof(ELEMENT*));
+	newHash->Size = INITIAL_HASHTABLE_SIZE;
+	newHash->Array = (ELEMENT**)malloc(INITIAL_HASHTABLE_SIZE * sizeof(ELEMENT*));
 
 	if (NULL == newHash->Array)
 	{
