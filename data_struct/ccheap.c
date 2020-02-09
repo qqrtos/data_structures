@@ -83,7 +83,7 @@ void HpCorrectMinHeapError(CC_HEAP* MinHeap, int Index)
 	if (smallest != Index)
 	{
 		swap(&MinHeap->Array[smallest], &MinHeap->Array[Index]);
-		HpCorrectMaxHeapError(MinHeap, smallest);
+		HpCorrectMinHeapError(MinHeap, smallest);
 	}
 }
 
@@ -101,7 +101,7 @@ void HpCorrectInsertionError(CC_HEAP* Heap, int Index)
 			HpCorrectInsertionError(Heap, Parent); ///Recursively go up the heap and check the property
 		}
 		///Swap if inserted element is lower than parent (min heap)
-		else if (strcmp(Heap->Type,"min")==0 && Heap->Array[Index] < Heap->Array[Parent])
+		else if (strcmp(Heap->Type, "min") == 0 && Heap->Array[Index] < Heap->Array[Parent])
 		{
 			swap(&Heap->Array[Index], &Heap->Array[Parent]);
 			HpCorrectInsertionError(Heap, Parent); ///Recursively go up the heap and check the property
@@ -116,22 +116,27 @@ int HpCreateMaxHeap(CC_HEAP** MaxHeap, CC_VECTOR* InitialElements)
 	{
 		return -1; ///Not enough memory.
 	}
-	char* Type = (char*)malloc(4 * sizeof(char));
 	char* maxType = "max";
-
-	if (NULL == Type)
-	{
-		return -1;
-	}
-	strcpy_s(Type, 4 * sizeof(char), maxType);
-	newHeap->Type = Type;
-	newHeap->Size = INITIAL_HEAP_SIZE;
+	newHeap->Type = maxType;
 
 	if (NULL != InitialElements)
 	{
 		///If the optional parameter is not NULL, build max heap from it.
 
-		newHeap->Array = InitialElements->Array;
+		///Build array from vector elements.
+		int* Array = (int*)malloc(InitialElements->Count * sizeof(int));
+
+		if (NULL == Array)
+		{
+			return -1;
+		}
+
+		for (int i = 0; i < InitialElements->Count; ++i)
+		{
+			Array[i] = InitialElements->Array[i];
+		}
+		newHeap->Array = Array;
+		newHeap->Size = InitialElements->Count;
 		newHeap->Count = InitialElements->Count;
 
 		///Vector is larger than current hgeap size.
@@ -150,6 +155,7 @@ int HpCreateMaxHeap(CC_HEAP** MaxHeap, CC_VECTOR* InitialElements)
 	{
 		newHeap->Array = NULL;
 		newHeap->Count = 0;
+		newHeap->Size = 0;
 	}
 
 	*MaxHeap = newHeap;
@@ -164,29 +170,27 @@ int HpCreateMinHeap(CC_HEAP** MinHeap, CC_VECTOR* InitialElements)
 	{
 		return -1;
 	}
-	char* Type = (char*)malloc(4 * sizeof(char));
 	char* minType = "min";
+	newHeap->Type = minType;
 
-	if (NULL == Type)
-	{
-		return -1;
-	}
-	strcpy_s(Type, 4 * sizeof(char), minType);
-	newHeap->Type = Type;
-	newHeap->Size = INITIAL_HEAP_SIZE;
-
-	if (NULL != InitialElements)
+	if (NULL != InitialElements && NULL!= InitialElements->Array)
 	{
 		///Optional parameter is not NULL, so build min heap from it.
+		
+		int* Array = (int*)malloc(InitialElements->Count * sizeof(int));
 
-		newHeap->Array = InitialElements->Array;
-		newHeap->Count = InitialElements->Count;
-
-		///Vector is larger than current heap size.
-		if (newHeap->Count > newHeap->Size)
+		if (NULL == Array)
 		{
-			newHeap->Size = newHeap->Count;
+			return -1;
 		}
+
+		for (int i = 0; i < InitialElements->Count; ++i)
+		{
+			Array[i] = InitialElements->Array[i];
+		}
+		newHeap->Array = Array;
+		newHeap->Count = InitialElements->Count;
+		newHeap->Size = InitialElements->Count;
 
 		///Go from (Count / 2 + 1) down to 0 because elements [Count/2+2,...,Count-1] are all leaves that satisfy the requirements.
 		for (int i = newHeap->Count / 2 + 1; i >= 0; --i)
@@ -196,6 +200,7 @@ int HpCreateMinHeap(CC_HEAP** MinHeap, CC_VECTOR* InitialElements)
 	}
 	else
 	{
+		newHeap->Size = 0;
 		newHeap->Array = NULL;
 		newHeap->Count = 0;
 	}
@@ -218,8 +223,6 @@ int HpDestroy(CC_HEAP** Heap)
 	{
 		free(newHeap->Array);
 	}
-	free(newHeap->Type);
-
 	free(newHeap);
 
 	*Heap = NULL;
@@ -251,16 +254,15 @@ int HpInsert(CC_HEAP* Heap, int Value)
 	else ///Heap already contains some elements => insert Value at a valid position
 	{
 		///Reallocate memory if heap is full.
-		int* Array = NULL;
 		if (Heap->Count >= Heap->Size)
 		{
-			Array = (int*)realloc(Heap->Array, (Heap->Size + INITIAL_HEAP_SIZE) * sizeof(int));
-			Heap->Size += INITIAL_HEAP_SIZE;
+			int* Array = (int*)realloc(Heap->Array, (Heap->Size + INITIAL_HEAP_SIZE) * sizeof(int));
 
 			if (NULL == Array)
 			{
 				return -1;
 			}
+			Heap->Size += INITIAL_HEAP_SIZE;
 
 			Array[Heap->Count] = Value;
 			Heap->Count += 1;
@@ -314,9 +316,25 @@ int HpGetExtreme(CC_HEAP* Heap, int* ExtremeValue)
 
 int HpPopExtreme(CC_HEAP* Heap, int* ExtremeValue)
 {
-	CC_UNREFERENCED_PARAMETER(Heap);
-	CC_UNREFERENCED_PARAMETER(ExtremeValue);
-	return -1;
+	if (NULL == Heap)
+	{
+		return -1;
+	}
+
+	swap(&Heap->Array[0], &Heap->Array[Heap->Count - 1]);
+	*ExtremeValue = Heap->Array[Heap->Count - 1];
+	Heap->Count -= 1;
+
+	if (strcmp(Heap->Type, "max") == 0)
+	{
+		HpCorrectMaxHeapError(Heap, 0);
+	}
+	else
+	{
+		HpCorrectMinHeapError(Heap, 0);
+	}
+
+	return 0;
 }
 
 int HpGetElementCount(CC_HEAP* Heap)
@@ -343,39 +361,36 @@ int HpSortToVector(CC_HEAP* Heap, CC_VECTOR* SortedVector)
 	}
 
 	///Prepare sorted vector.
-	int* Array = (int*)malloc(Heap->Size * sizeof(int));
+	int* Array = (int*)malloc(Heap->Count * sizeof(int));
 	if (NULL == Array)
 	{
 		return -1;
 	}
 	SortedVector->Array = Array;
 	SortedVector->Count = 0;
-	SortedVector->Size = Heap->Size;
+	SortedVector->Size = Heap->Count;
 
 	if (strcmp(Heap->Type, "min") == 0)
 	{
 		///Root is always minimum, so put it at then end of the vector, remove it from heap + correct possible errors.
 		while (Heap->Count > 0)
 		{
-			swap(&Heap->Array[0], &Heap->Array[Heap->Count - 1]);
-			VecInsertTail(SortedVector, Heap->Array[Heap->Count - 1]);
-			Heap->Count -= 1;
-			Heap->Size -= 1;
-			HpCorrectMinHeapError(Heap, 0);
+			int Minimum;
+			HpPopExtreme(Heap, &Minimum);
+			VecInsertTail(SortedVector, Minimum);
 		}
 	}
-	else 
+	else
 	{
 		///To sort a max heap in increasing order, we insert the root as a head each time.
 		while (Heap->Count > 0)
 		{
-			swap(&Heap->Array[0], &Heap->Array[Heap->Count - 1]);
-			VecInsertHead(SortedVector, Heap->Array[Heap->Count - 1]);
-			Heap->Count -= 1;
-			Heap->Size -= 1;
-			HpCorrectMaxHeapError(Heap, 0);
+			int Maximum;
+			HpPopExtreme(Heap, &Maximum);
+			SortedVector->Count += 1;
+			SortedVector->Array[Heap->Count] = Maximum;
 		}
 	}
-	
+
 	return 0;
 }
