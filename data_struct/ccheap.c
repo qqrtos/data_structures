@@ -1,6 +1,24 @@
 #include "ccheap.h"
 #include "common.h"
-#include <string.h>
+
+///Returns -1 if str1>str2, 1 if str2>str1 and 0 if they're equal.
+int strcmp(char* String1, char* String2)
+{
+	while (*String1 != '\0' && *String2 != '\0')
+	{
+		if (*String1 > *String2)
+		{
+			return -1;
+		}
+		else if (*String1 < *String2)
+		{
+			return 1;
+		}
+		String1 += 1;
+		String2 += 1;
+	}
+	return 0;
+}
 
 ///Swaps two integers
 void swap(int* x, int* y)

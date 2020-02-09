@@ -1,7 +1,25 @@
 #include "cchashtable.h"
 #include "common.h"
 #include <memory.h>
-#include <string.h>
+
+///Returns -1 if str1>str2, 1 if str2>str1 and 0 if they're equal.
+int _strcmp(char* String1, char* String2)
+{
+	while (*String1 != '\0' && *String2 != '\0')
+	{
+		if (*String1 > *String2)
+		{
+			return -1;
+		}
+		else if (*String1 < *String2)
+		{
+			return 1;
+		}
+		String1 += 1;
+		String2 += 1;
+	}
+	return 0;
+}
 
 int isPrime(int Value)
 {
@@ -242,7 +260,7 @@ int HtSetKeyValue(CC_HASH_TABLE* HashTable, char* Key, int Value)
 	}
 	entry->isDeleted = 0;
 	entry->isAvailable = 0;
-	strcpy_s(entry->Key, 256 * sizeof(char), Key);
+	memcpy(entry->Key, Key, 256 * sizeof(char));
 	entry->Value = Value;
 
 	int index = GetIndexFromKey(HashTable, Key);
@@ -286,7 +304,7 @@ int HtGetKeyValue(CC_HASH_TABLE* HashTable, char* Key, int* Value)
 		{
 			return -1;
 		}
-		if (0 == HashTable->Array[i]->isDeleted && strcmp(HashTable->Array[i]->Key, Key) == 0) /// Key was found.
+		if (0 == HashTable->Array[i]->isDeleted && _strcmp(HashTable->Array[i]->Key, Key) == 0) /// Key was found.
 		{
 			*Value = HashTable->Array[i]->Value;
 			return 0;
@@ -300,7 +318,7 @@ int HtGetKeyValue(CC_HASH_TABLE* HashTable, char* Key, int* Value)
 		{
 			return -1;
 		}
-		if (0 == HashTable->Array[i]->isDeleted && strcmp(HashTable->Array[i]->Key, Key) == 0)
+		if (0 == HashTable->Array[i]->isDeleted && _strcmp(HashTable->Array[i]->Key, Key) == 0)
 		{
 			*Value = HashTable->Array[i]->Value;
 			return 0;
@@ -326,7 +344,7 @@ int HtRemoveKey(CC_HASH_TABLE* HashTable, char* Key)
 
 	for (int i = Index; i < HashTable->Size; ++i)
 	{
-		if (strcmp(HashTable->Array[i]->Key, Key) == 0)
+		if (_strcmp(HashTable->Array[i]->Key, Key) == 0)
 		{
 			HashTable->Array[i]->isDeleted = 1;
 			return 0;
@@ -335,7 +353,7 @@ int HtRemoveKey(CC_HASH_TABLE* HashTable, char* Key)
 
 	for (int i = 0; i < Index; ++i)
 	{
-		if (strcmp(HashTable->Array[i]->Key, Key) == 0)
+		if (_strcmp(HashTable->Array[i]->Key, Key) == 0)
 		{
 			HashTable->Array[i]->isDeleted = 1;
 			return 0;
@@ -362,7 +380,7 @@ int HtHasKey(CC_HASH_TABLE* HashTable, char* Key)
 
 	for (int i = Index; i < HashTable->Size; ++i)
 	{
-		if (0 == HashTable->Array[i]->isDeleted && strcmp(HashTable->Array[i]->Key, Key) == 0)
+		if (0 == HashTable->Array[i]->isDeleted && _strcmp(HashTable->Array[i]->Key, Key) == 0)
 		{
 			return 1;
 		}
@@ -370,7 +388,7 @@ int HtHasKey(CC_HASH_TABLE* HashTable, char* Key)
 
 	for (int i = 0; i < Index; ++i)
 	{
-		if (0 == HashTable->Array[i]->isDeleted && strcmp(HashTable->Array[i]->Key, Key) == 0)
+		if (0 == HashTable->Array[i]->isDeleted && _strcmp(HashTable->Array[i]->Key, Key) == 0)
 		{
 			return 1;
 		}
@@ -419,7 +437,8 @@ int HtGetFirstKey(CC_HASH_TABLE* HashTable, CC_HASH_TABLE_ITERATOR** Iterator, c
 		{
 			(*Iterator)->Current = HashTable->Array[i];
 			(*Iterator)->Index = i;
-			strcpy_s(*Key, sizeof(HashTable->Array[i]->Key), HashTable->Array[i]->Key);
+			///strcpy_s(*Key, sizeof(HashTable->Array[i]->Key), HashTable->Array[i]->Key);
+			memcpy(Key, HashTable->Array[i]->Key, sizeof(HashTable->Array[i]->Key));
 			return 0;
 		}
 	}
@@ -440,7 +459,8 @@ int HtGetNextKey(CC_HASH_TABLE_ITERATOR* Iterator, char** Key)
 		{
 			Iterator->Current = Iterator->HashTable->Array[i];
 			Iterator->Index = i;
-			strcpy_s(*Key, sizeof(Iterator->HashTable->Array[i]->Key), Iterator->HashTable->Array[i]->Key);
+			///strcpy_s(*Key, sizeof(Iterator->HashTable->Array[i]->Key), Iterator->HashTable->Array[i]->Key);
+			memcpy(Key, Iterator->HashTable->Array[i]->Key, sizeof(Iterator->HashTable->Array[i]->Key));
 			return 0;
 		}
 	}
@@ -451,7 +471,8 @@ int HtGetNextKey(CC_HASH_TABLE_ITERATOR* Iterator, char** Key)
 		{
 			Iterator->Current = Iterator->HashTable->Array[i];
 			Iterator->Index = i;
-			strcpy_s(*Key, sizeof(Iterator->HashTable->Array[i]->Key), Iterator->HashTable->Array[i]->Key);
+			///strcpy_s(*Key, sizeof(Iterator->HashTable->Array[i]->Key), Iterator->HashTable->Array[i]->Key);
+			memcpy(Key, Iterator->HashTable->Array[i]->Key, sizeof(Iterator->HashTable->Array[i]->Key));
 			return 0;
 		}
 	}
