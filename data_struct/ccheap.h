@@ -1,11 +1,13 @@
 #pragma once
 
 #include "ccvector.h"
+#define INITIAL_HEAP_SIZE 1
 
 typedef struct _CC_HEAP{
     // Members
     int* Array;
     int Size;
+    int Count;
     char* Type;
 } CC_HEAP;
 

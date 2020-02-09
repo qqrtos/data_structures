@@ -193,7 +193,7 @@ int TestHeap()
     }
 
     printf("Final Heap:  ");
-    for (int i = 0; i < usedHeap->Size; ++i)
+    for (int i = 0; i < usedHeap->Count; ++i)
     {
         printf("%d ", usedHeap->Array[i]);
     }
