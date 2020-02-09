@@ -21,10 +21,6 @@ int main(void)
 
 void RunTests()
 {
-	/// NOTE: The tests provided here are by no means exhaustive and are only
-	/// provided as a starting point (not all functions are tested, not all use cases
-	/// and failure scenarios are covered). You are encouraged to expand these tests
-	/// to include missing scenarios.
 	if (0 == TestVector())
 	{
 		printf("Vector test passed\n\n");
@@ -54,7 +50,7 @@ void RunTests()
 
 	if (0 == TestHeap())
 	{
-		printf("Heap test passed\n\n");
+		printf("\nHeap test passed\n\n");
 	}
 	else
 	{
@@ -191,15 +187,19 @@ int TestHeap()
 		goto cleanup;
 	}
 
-	/*CC_VECTOR* vector;
-	VecCreate(&vector);
-	retVal = HpSortToVector(usedHeap, vector);
-	printf("Sorted vector:  ");
-	for (int i = 0; i < vector->Count; ++i)
+	retVal = HpRemove(usedHeap, 3);
+	if (0 != retVal)
 	{
-		printf("%d ", vector->Array[i]);
-	}*/
-	
+		printf("HpRemove failed!\n");
+		goto cleanup;
+	}
+	retVal = HpRemove(usedHeap, 1);
+	if (0 != retVal)
+	{
+		printf("HpRemove failed!\n");
+		goto cleanup;
+	}
+
 	printf("\nFinal Heap:  ");
 	for (int i = 0; i < usedHeap->Count; ++i)
 	{
@@ -207,7 +207,7 @@ int TestHeap()
 	}
 	printf("\n");
 
-	if (11 != HpGetElementCount(usedHeap))
+	if (7 != HpGetElementCount(usedHeap))
 	{
 		printf("Invalid element count!\n");
 		retVal = -1;
@@ -221,7 +221,7 @@ int TestHeap()
 		goto cleanup;
 	}
 
-	if (1 != foundVal)
+	if (4 != foundVal)
 	{
 		printf("Invalid minimum value returned!\n");
 		retVal = -1;
@@ -231,6 +231,15 @@ int TestHeap()
 cleanup:
 	if (NULL != usedHeap)
 	{
+		CC_VECTOR* vector = NULL;
+		VecCreate(&vector);
+		HpSortToVector(usedHeap, vector);
+		printf("Sorted vector:  ");
+		for (int i = 0; i < vector->Count; ++i)
+		{
+			printf("%d ", vector->Array[i]);
+		}
+		
 		if (0 != HpDestroy(&usedHeap))
 		{
 			printf("HpDestroy failed!\n");

@@ -292,9 +292,42 @@ int HpInsert(CC_HEAP* Heap, int Value)
 
 int HpRemove(CC_HEAP* Heap, int Value)
 {
-	CC_UNREFERENCED_PARAMETER(Heap);
-	CC_UNREFERENCED_PARAMETER(Value);
-	return -1;
+	if (NULL == Heap)
+	{
+		return -1;
+	}
+
+	///Delete every appearence of Value.
+	for (int i = 0; i < Heap->Count; ++i)
+	{
+		if (Value == Heap->Array[i])
+		{
+			for (int j = i; j < Heap->Count - 1; ++j)
+			{
+				Heap->Array[j] = Heap->Array[j + 1];
+			}
+			Heap->Count -= 1;
+			--i;
+		}
+	}
+
+	///Restore heap propriety.
+	if (strcmp(Heap->Type, "max") == 0)
+	{
+		for (int i = Heap->Count / 2 + 1; i >= 0; --i)
+		{
+			HpCorrectMaxHeapError(Heap, i);
+		}
+	}
+	else
+	{
+		for (int i = Heap->Count / 2 + 1; i >= 0; --i)
+		{
+			HpCorrectMinHeapError(Heap, i);
+		}
+	}
+
+	return 0;
 }
 
 int HpGetExtreme(CC_HEAP* Heap, int* ExtremeValue)
