@@ -29,9 +29,9 @@ void swap(int* x, int* y)
 }
 
 ///Return the index for the parent of a node.
-int HpParent(int childIndex)
+int HpParent(int Index)
 {
-	return (childIndex - 1) / 2;
+	return (Index - 1) / 2;
 }
 
 ///Return the index of the node to the left.
@@ -65,7 +65,7 @@ void HpCorrectMaxHeapError(CC_HEAP* MaxHeap, int Index)
 
 	if (right < MaxHeap->Count && MaxHeap->Array[right] > MaxHeap->Array[largest])
 	{
-		///Right node is larger than it's parent
+		///Right node is larger than it's parent and left node.
 		largest = right;
 	}
 
@@ -132,6 +132,7 @@ int HpCreateMaxHeap(CC_HEAP** MaxHeap, CC_VECTOR* InitialElements)
 	CC_HEAP* newHeap = (CC_HEAP*)malloc(1 * sizeof(CC_HEAP));
 	if (NULL == newHeap)
 	{
+		free(newHeap);
 		return -1; ///Not enough memory.
 	}
 	char* maxType = "max";
@@ -146,6 +147,7 @@ int HpCreateMaxHeap(CC_HEAP** MaxHeap, CC_VECTOR* InitialElements)
 
 		if (NULL == Array)
 		{
+			free(Array);
 			return -1;
 		}
 
@@ -264,6 +266,7 @@ int HpInsert(CC_HEAP* Heap, int Value)
 
 		if (NULL == Array)
 		{
+			free(Array);
 			return -1;
 		}
 		Array[0] = Value;
@@ -417,6 +420,7 @@ int HpSortToVector(CC_HEAP* Heap, CC_VECTOR* SortedVector)
 	int* Array = (int*)malloc(Heap->Count * sizeof(int));
 	if (NULL == Array)
 	{
+		free(Array);
 		return -1;
 	}
 	SortedVector->Array = Array;
