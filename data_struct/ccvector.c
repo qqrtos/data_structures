@@ -15,6 +15,7 @@ int VecCreate(CC_VECTOR** Vector)
 	vec = (CC_VECTOR*)malloc(sizeof(CC_VECTOR));
 	if (NULL == vec)
 	{
+		free(vec);
 		return -1;
 	}
 
@@ -25,7 +26,7 @@ int VecCreate(CC_VECTOR** Vector)
 	vec->Array = (int*)malloc(sizeof(int) * INITIAL_VECTOR_SIZE);
 	if (NULL == vec->Array)
 	{
-		free(vec);
+		free(vec->Array);
 		return -1;
 	}
 
@@ -240,6 +241,7 @@ int VecAppend(CC_VECTOR* DestVector, CC_VECTOR* SrcVector)
 		return -1;
 	}
 
+	///Append SrcVector to the end of DestVector
 	for (int i = 0; i < SrcVector->Count; ++i)
 	{
 		int Value = SrcVector->Array[i];
