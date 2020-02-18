@@ -1,8 +1,17 @@
 #pragma once
+#define INITIAL_TREE_SIZE 50
+
+typedef struct _TREE_NODE {
+    int Value;
+    int Height;
+    struct _TREE_NODE* Left;
+    struct _TREE_NODE* Right;
+}TREE_NODE;
 
 typedef struct _CC_TREE {
     // Members
-    int PlaceHolder; // placeholder to be removed when actual implementation is added
+    TREE_NODE* Root;
+    int Size;
 } CC_TREE;
 
 int TreeCreate(CC_TREE **Tree);
