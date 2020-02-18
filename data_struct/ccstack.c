@@ -3,9 +3,8 @@
 
 int StCreate(CC_STACK** Stack)
 {
-	CC_STACK* newStack = NULL;
+	CC_STACK* newStack = (CC_STACK*)malloc(1 * sizeof(CC_STACK));
 	NODE* node = (NODE*)malloc(1 * sizeof(NODE));   ///Space for a node.
-	newStack = (CC_STACK*)malloc(1 * sizeof(CC_STACK));
 
 	if (NULL == newStack || NULL == node) {
 		free(newStack);
@@ -19,6 +18,7 @@ int StCreate(CC_STACK** Stack)
 	(*Stack)->base = node;
 	(*Stack)->top = node;
 	(*Stack)->size = 0;
+
 	return 0;
 }
 
@@ -35,6 +35,9 @@ int StDestroy(CC_STACK** Stack)
 	
 	free((*Stack)->top);
 	free(*Stack);
+
+	*Stack = NULL;
+
 	return 0;
 }
 
@@ -44,6 +47,7 @@ int StPush(CC_STACK* Stack, int Value)
 		return -1;
 
 	NODE* node = (NODE*)malloc(1 * sizeof(NODE));
+
 	if (NULL == node) {
 		free(node);
 		return -1;   ///Insufficient memory or smth
@@ -53,6 +57,7 @@ int StPush(CC_STACK* Stack, int Value)
 	node->next = NULL;
 	Stack->top = node;   ///The new top is the new node.
 	Stack->size += 1;
+
 	return 0;
 }
 

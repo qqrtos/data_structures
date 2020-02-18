@@ -434,6 +434,13 @@ int TestStack()
 		goto cleanup;
 	}
 
+	retVal = StPush(usedStack, 1);
+	if (0 != retVal)
+	{
+		printf("StPush failed!\n");
+		goto cleanup;
+	}
+
 	if (0 != StIsEmpty(usedStack))
 	{
 		printf("Invalid answer to StIsEmpty!\n");
@@ -448,7 +455,7 @@ int TestStack()
 		goto cleanup;
 	}
 
-	if (foundVal != 10)
+	if (foundVal != 1)
 	{
 		printf("Invalid value after pop!\n");
 		retVal = -1;
@@ -463,7 +470,7 @@ int TestStack()
 	StPush(stackToPush, 1);
 	StPush(stackToPush, 4);
 	StPush(stackToPush, 5);
-	if (0 != StPushStack(usedStack, stackToPush) || usedStack->size != 6)
+	if (0 != StPushStack(usedStack, stackToPush) || usedStack->size != 7)
 	{
 		printf("StPushStack failed!\n");
 		retVal = -1;
@@ -474,6 +481,36 @@ int TestStack()
 		int value;
 		StPop(usedStack, &value);
 		printf("%d ", value);
+	}
+
+	if (0 != StClear(usedStack))
+	{
+		printf("StClear failed!\n");
+		retVal = -1;
+		goto cleanup;
+	}
+
+	retVal = StPush(usedStack, 10);
+	if (0 != retVal)
+	{
+		printf("StPush failed after StClear!\n");
+		goto cleanup;
+	}
+
+	retVal = StPeek(usedStack, &foundVal);
+	if (10 != foundVal)
+	{
+		printf("StPeek failed after StClear!\n");
+		retVal = -1;
+		goto cleanup;
+	}
+
+	retVal = StPop(usedStack, &foundVal);
+	if (10 != foundVal)
+	{
+		printf("StPop failed after StClear!\n");
+		retVal = -1;
+		goto cleanup;
 	}
 
 cleanup:
