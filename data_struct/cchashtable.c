@@ -186,6 +186,7 @@ int HtCreate(CC_HASH_TABLE** HashTable)
 
 	if (NULL == newHash)
 	{
+		free(newHash);
 		return -1;
 	}
 
@@ -194,6 +195,7 @@ int HtCreate(CC_HASH_TABLE** HashTable)
 
 	if (NULL == newHash->Array)
 	{
+		free(newHash->Array);
 		return -1;
 	}
 

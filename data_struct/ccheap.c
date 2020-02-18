@@ -186,6 +186,7 @@ int HpCreateMinHeap(CC_HEAP** MinHeap, CC_VECTOR* InitialElements)
 	CC_HEAP* newHeap = (CC_HEAP*)malloc(1 * sizeof(CC_HEAP));
 	if (NULL == newHeap)
 	{
+		free(newHeap);
 		return -1;
 	}
 	char* minType = "min";
@@ -199,6 +200,7 @@ int HpCreateMinHeap(CC_HEAP** MinHeap, CC_VECTOR* InitialElements)
 
 		if (NULL == Array)
 		{
+			free(Array);
 			return -1;
 		}
 
