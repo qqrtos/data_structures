@@ -147,6 +147,7 @@ int HtRealloc(CC_HASH_TABLE** HashTable)
 
 		if (NULL == newHash->Array[i])
 		{
+			free(newHash->Array[i]);
 			return -1;
 		}
 
@@ -206,6 +207,7 @@ int HtCreate(CC_HASH_TABLE** HashTable)
 
 		if (NULL == newHash->Array[i])
 		{
+			free(newHash->Array[i]);
 			return -1;
 		}
 
@@ -281,7 +283,7 @@ int HtSetKeyValue(CC_HASH_TABLE* HashTable, char* Key, int Value)
 			return 0;
 	}
 
-	return -1;
+	return -1; ///Fail
 }
 
 int HtGetKeyValue(CC_HASH_TABLE* HashTable, char* Key, int* Value)
@@ -302,10 +304,12 @@ int HtGetKeyValue(CC_HASH_TABLE* HashTable, char* Key, int* Value)
 	///Search after index.
 	for (int i = indx; i < HashTable->Size; ++i)
 	{
+		///If spot is available, cluster ended => no key found
 		if (1 == HashTable->Array[i]->isAvailable)
 		{
 			return -1;
 		}
+
 		if (0 == HashTable->Array[i]->isDeleted && _strcmp(HashTable->Array[i]->Key, Key) == 0) /// Key was found.
 		{
 			*Value = HashTable->Array[i]->Value;
@@ -316,10 +320,12 @@ int HtGetKeyValue(CC_HASH_TABLE* HashTable, char* Key, int* Value)
 	///Search before index.
 	for (int i = 0; i < indx; ++i)
 	{
+		///If spot is available, cluster ended => no key found
 		if (1 == HashTable->Array[i]->isAvailable)
 		{
 			return -1;
 		}
+
 		if (0 == HashTable->Array[i]->isDeleted && _strcmp(HashTable->Array[i]->Key, Key) == 0)
 		{
 			*Value = HashTable->Array[i]->Value;
@@ -327,7 +333,7 @@ int HtGetKeyValue(CC_HASH_TABLE* HashTable, char* Key, int* Value)
 		}
 	}
 
-	return -1;
+	return -1; ///Key not found.
 }
 
 int HtRemoveKey(CC_HASH_TABLE* HashTable, char* Key)
@@ -421,6 +427,7 @@ int HtGetFirstKey(CC_HASH_TABLE* HashTable, CC_HASH_TABLE_ITERATOR** Iterator, c
 	iterator = (CC_HASH_TABLE_ITERATOR*)malloc(sizeof(CC_HASH_TABLE_ITERATOR));
 	if (NULL == iterator)
 	{
+		free(iterator);
 		return -1;
 	}
 
