@@ -62,7 +62,7 @@ int VecInsertTail(CC_VECTOR* Vector, int Value)
 	if (Vector->Count >= Vector->Size)
 	{
 		/// REALLOC
-		int* Array = realloc(Vector->Array, (INITIAL_VECTOR_SIZE + Vector->Count) * sizeof(int));
+		int* Array = (int*)realloc(Vector->Array, (INITIAL_VECTOR_SIZE + Vector->Count) * sizeof(int));
 		if (NULL == Array)
 		{
 			return -1;
@@ -87,7 +87,7 @@ int VecInsertHead(CC_VECTOR* Vector, int Value)
 	if (Vector->Count >= Vector->Size)
 	{
 		/// REALLOC
-		int* Array = realloc(Vector->Array, (INITIAL_VECTOR_SIZE + Vector->Count) * sizeof(int));
+		int* Array = (int*)realloc(Vector->Array, (INITIAL_VECTOR_SIZE + Vector->Count) * sizeof(int));
 		if (NULL == Array)
 		{
 			return -1;
@@ -116,7 +116,7 @@ int VecInsertAfterIndex(CC_VECTOR* Vector, int Index, int Value)
 	if (Vector->Count >= Vector->Size)
 	{
 		/// REALLOC
-		int* Array = realloc(Vector->Array, (INITIAL_VECTOR_SIZE + Vector->Count) * sizeof(int));
+		int* Array = (int*)realloc(Vector->Array, (INITIAL_VECTOR_SIZE + Vector->Count) * sizeof(int));
 		if (NULL == Array)
 		{
 			return -1;

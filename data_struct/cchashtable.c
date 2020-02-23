@@ -7,7 +7,7 @@ int _strcmp(char* String1, char* String2)
 {
 	while (*String1 != '\0' && *String2 != '\0')
 	{
-		if (*String1 > *String2)
+		if (*String1 > * String2)
 		{
 			return -1;
 		}
@@ -163,7 +163,7 @@ int HtRealloc(CC_HASH_TABLE** HashTable)
 		///Transfer old keys to the new hash table.
 		if (0 == entry->isAvailable && 0 == entry->isDeleted)
 		{
-			int Index = GetIndexFromKey(newHash, (*HashTable)->Array[i]->Key);
+			int Index = GetIndexFromKey(newHash, entry->Key);
 			HtInsert(newHash, Index, entry);
 		}
 		else
@@ -439,7 +439,7 @@ int HtGetFirstKey(CC_HASH_TABLE* HashTable, CC_HASH_TABLE_ITERATOR** Iterator, c
 
 	*Iterator = iterator;
 
-	// FIND THE FIRST KEY AND SET Key
+	/// FIND THE FIRST KEY AND SET Key
 	for (int i = 0; i < HashTable->Size; ++i)
 	{
 		if (0 == HashTable->Array[i]->isAvailable && 0 == HashTable->Array[i]->isDeleted)
@@ -464,24 +464,26 @@ int HtGetNextKey(CC_HASH_TABLE_ITERATOR* Iterator, char** Key)
 
 	for (int i = Iterator->Index + 1; i < Iterator->HashTable->Size; ++i)
 	{
-		if (0 == Iterator->HashTable->Array[i]->isAvailable && 0 == Iterator->HashTable->Array[i]->isDeleted)
+		ELEMENT* entry = Iterator->HashTable->Array[i];
+		if (0 == entry->isAvailable && 0 == entry->isDeleted)
 		{
-			Iterator->Current = Iterator->HashTable->Array[i];
+			Iterator->Current = entry;
 			Iterator->Index = i;
 			///strcpy_s(*Key, sizeof(Iterator->HashTable->Array[i]->Key), Iterator->HashTable->Array[i]->Key);
-			memcpy(Key, Iterator->HashTable->Array[i]->Key, sizeof(Iterator->HashTable->Array[i]->Key));
+			memcpy(Key, entry->Key, sizeof(entry->Key));
 			return 0;
 		}
 	}
 
 	for (int i = 0; i < Iterator->Index; ++i)
 	{
-		if (0 == Iterator->HashTable->Array[i]->isAvailable && 0 == Iterator->HashTable->Array[i]->isDeleted)
+		ELEMENT* entry = Iterator->HashTable->Array[i];
+		if (0 == entry->isAvailable && 0 == entry->isDeleted)
 		{
-			Iterator->Current = Iterator->HashTable->Array[i];
+			Iterator->Current = entry;
 			Iterator->Index = i;
 			///strcpy_s(*Key, sizeof(Iterator->HashTable->Array[i]->Key), Iterator->HashTable->Array[i]->Key);
-			memcpy(Key, Iterator->HashTable->Array[i]->Key, sizeof(Iterator->HashTable->Array[i]->Key));
+			memcpy(Key, entry->Key, sizeof(entry->Key));
 			return 0;
 		}
 	}
