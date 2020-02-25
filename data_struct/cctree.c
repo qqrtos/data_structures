@@ -244,19 +244,18 @@ TREE_NODE* TreeDeleteNode(TREE_NODE* Root, int Value)
 		///Node with 2 children
 		else
 		{
-			// node with two children: Get the inorder 
-			// successor (smallest in the right subtree) 
+			///Get the inorder successor (smallest in the right subtree) 
 			TREE_NODE* aux = MinNode(Root->Right);
 
-			// Copy the inorder successor's data to this node 
+			///Copy the inorder successor's data to this node 
 			Root->Value = aux->Value;
 
-			// Delete the inorder successor 
+			///Delete the inorder successor 
 			Root->Right = TreeDeleteNode(Root->Right, aux->Value);
 		}
 	}
 
-	// If the tree had only one node then return 
+	///If the tree had only one node then return 
 	if (Root == NULL)
 	{
 		return Root;
@@ -390,12 +389,33 @@ int TreeClear(CC_TREE* Tree)
 	return 0;
 }
 
-int TreeGetNthPreorder(CC_TREE* Tree, int Index, int* Value)
+void GetPreorderValue(TREE_NODE* Node, int Index, int* Value)
 {
-	CC_UNREFERENCED_PARAMETER(Tree);
+	CC_UNREFERENCED_PARAMETER(Node);
 	CC_UNREFERENCED_PARAMETER(Index);
 	CC_UNREFERENCED_PARAMETER(Value);
-	return -1;
+	return;
+}
+
+int TreeGetNthPreorder(CC_TREE* Tree, int Index, int* Value)
+{
+
+	if (NULL == Tree)
+	{
+		return -1;
+	}
+	if (Index > Tree->Size || Index < 0)
+	{
+		return -1;
+	}
+	if (NULL == Value)
+	{
+		return -1;
+	}
+
+	GetPreorderValue(Tree->Root, Index, Value);
+
+	return 0;
 }
 
 void GetInorderValue(TREE_NODE* Node, int Index, int* Value)
@@ -426,21 +446,12 @@ int TreeGetNthInorder(CC_TREE* Tree, int Index, int* Value)
 	return 0;
 }
 
-
-///WRONG!!!!!
 void GetPostorderValue(TREE_NODE* Node, int Index, int* Value)
 {
-	if (NULL != Node)
-	{
-		GetPostorderValue(Node->Left, Index, Value);
-		GetPostorderValue(Node->Right, Index, Value);
-		if (0 == Index)
-		{
-			*Value = Node->Value;
-			printf("V");
-		}
-		printf("%d ", Node->Value);
-	}
+	CC_UNREFERENCED_PARAMETER(Node);
+	CC_UNREFERENCED_PARAMETER(Index);
+	CC_UNREFERENCED_PARAMETER(Value);
+	return;
 }
 
 int TreeGetNthPostorder(CC_TREE* Tree, int Index, int* Value)
