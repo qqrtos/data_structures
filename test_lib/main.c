@@ -116,6 +116,13 @@ int TestTree()
 		goto cleanup;
 	}
 
+	retVal = TreeInsert(usedTree, 31);
+	if (0 != retVal)
+	{
+		printf("TreeInsert failed!\n");
+		goto cleanup;
+	}
+
 	retVal = TreeInsert(usedTree, 44);
 	if (0 != retVal)
 	{
@@ -200,7 +207,7 @@ int TestTree()
 		goto cleanup;
 	}*/
 
-	if (14 != TreeGetCount(usedTree))
+	if (15 != TreeGetCount(usedTree))
 	{
 		printf("TreeGetCount invalid return value!\n");
 		retVal = -1;

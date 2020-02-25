@@ -295,9 +295,13 @@ int TreeRemove(CC_TREE* Tree, int Value)
 	{
 		return -1;
 	}
-
-	TreeDeleteNode(Tree->Root, Value);
-	Tree->Size -= 1;
+	
+	///Remove all occurences of Value.
+	while (TreeContains(Tree, Value))
+	{
+		TreeDeleteNode(Tree->Root, Value);
+		Tree->Size -= 1;
+	}
 
 	return 0;
 }
