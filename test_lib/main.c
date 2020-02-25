@@ -72,6 +72,7 @@ int TestTree()
 {
 	int retVal = -1;
 	CC_TREE* usedTree = NULL;
+	int foundVal;
 
 	retVal = TreeCreate(&usedTree);
 	if (0 != retVal)
@@ -80,21 +81,7 @@ int TestTree()
 		goto cleanup;
 	}
 
-	retVal = TreeInsert(usedTree, 20);
-	if (0 != retVal)
-	{
-		printf("TreeInsert failed!\n");
-		goto cleanup;
-	}
-
-	retVal = TreeInsert(usedTree, 5);
-	if (0 != retVal)
-	{
-		printf("TreeInsert failed!\n");
-		goto cleanup;
-	}
-
-	retVal = TreeInsert(usedTree, 3);
+	retVal = TreeInsert(usedTree, 4);
 	if (0 != retVal)
 	{
 		printf("TreeInsert failed!\n");
@@ -108,7 +95,91 @@ int TestTree()
 		goto cleanup;
 	}
 
-	if (1 != TreeContains(usedTree, 20))
+	retVal = TreeInsert(usedTree, 18);
+	if (0 != retVal)
+	{
+		printf("TreeInsert failed!\n");
+		goto cleanup;
+	}
+
+	retVal = TreeInsert(usedTree, 24);
+	if (0 != retVal)
+	{
+		printf("TreeInsert failed!\n");
+		goto cleanup;
+	}
+
+	retVal = TreeInsert(usedTree, 31);
+	if (0 != retVal)
+	{
+		printf("TreeInsert failed!\n");
+		goto cleanup;
+	}
+
+	retVal = TreeInsert(usedTree, 44);
+	if (0 != retVal)
+	{
+		printf("TreeInsert failed!\n");
+		goto cleanup;
+	}
+
+	retVal = TreeInsert(usedTree, 66);
+	if (0 != retVal)
+	{
+		printf("TreeInsert failed!\n");
+		goto cleanup;
+	}
+
+	retVal = TreeInsert(usedTree, 90);
+	if (0 != retVal)
+	{
+		printf("TreeInsert failed!\n");
+		goto cleanup;
+	}
+
+	retVal = TreeInsert(usedTree, 10);
+	if (0 != retVal)
+	{
+		printf("TreeInsert failed!\n");
+		goto cleanup;
+	}
+
+	retVal = TreeInsert(usedTree, 22);
+	if (0 != retVal)
+	{
+		printf("TreeInsert failed!\n");
+		goto cleanup;
+	}
+
+	retVal = TreeInsert(usedTree, 35);
+	if (0 != retVal)
+	{
+		printf("TreeInsert failed!\n");
+		goto cleanup;
+	}
+
+	retVal = TreeInsert(usedTree, 70);
+	if (0 != retVal)
+	{
+		printf("TreeInsert failed!\n");
+		goto cleanup;
+	}
+
+	retVal = TreeInsert(usedTree, 15);
+	if (0 != retVal)
+	{
+		printf("TreeInsert failed!\n");
+		goto cleanup;
+	}
+
+	retVal = TreeInsert(usedTree, 25);
+	if (0 != retVal)
+	{
+		printf("TreeInsert failed!\n");
+		goto cleanup;
+	}
+
+	if (1 != TreeContains(usedTree, 31))
 	{
 		printf("TreeContains invalid return value!\n");
 		retVal = -1;
@@ -129,19 +200,56 @@ int TestTree()
 		goto cleanup;
 	}*/
 
-	if (4 != TreeGetCount(usedTree))
+	if (14 != TreeGetCount(usedTree))
 	{
 		printf("TreeGetCount invalid return value!\n");
 		retVal = -1;
 		goto cleanup;
 	}
 
-	if (2 != TreeGetHeight(usedTree))
+	if (0 != TreeRemove(usedTree, 31))
+	{
+		printf("TreeRemove failed!\n");
+		retVal = -1;
+		goto cleanup;
+	}
+
+	if (13 != TreeGetCount(usedTree))
+	{
+		printf("TreeGetCount invalid return value after remove!\n");
+		retVal = -1;
+		goto cleanup;
+	}
+
+	if (0 != TreeContains(usedTree, 31))
+	{
+		printf("TreeContains invalid return after remove!\n");
+		retVal = -1;
+		goto cleanup;
+	}
+
+	if (3 != TreeGetHeight(usedTree))
 	{
 		printf("TreeGetHeight invalid return value!\n");
 		retVal = -1;
 		goto cleanup;
 	}
+
+	retVal = TreeGetNthPostorder(usedTree, 2, &foundVal);
+	if (0 != retVal)
+	{
+		printf("TreeNthPostorder failed!");
+		goto cleanup;
+	}
+	printf("Value at index %d in postorder: %d\n", 2, foundVal);
+
+	retVal = TreeGetNthInorder(usedTree, 4, &foundVal);
+	if (0 != retVal)
+	{
+		printf("TreeNthInorder failed!");
+		goto cleanup;
+	}
+	printf("Value at index %d in inorder: %d\n", 4, foundVal);
 
 	if (0 != TreeClear(usedTree))
 	{

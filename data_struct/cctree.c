@@ -1,5 +1,32 @@
 #include "cctree.h"
 #include "common.h"
+#include <stdio.h>
+
+TREE_NODE* MinNode(TREE_NODE* Root)
+{
+	///Return the left-most (minimum) node.
+	TREE_NODE* LeftNode = Root;
+
+	while (NULL != LeftNode->Left)
+	{
+		LeftNode = LeftNode->Left;
+	}
+
+	return LeftNode;
+}
+
+TREE_NODE* MaxNode(TREE_NODE* Root)
+{
+	///Return the right-most (maximum) node.
+	TREE_NODE* RightNode = Root;
+
+	while (NULL != RightNode->Right)
+	{
+		RightNode = RightNode->Right;
+	}
+
+	return RightNode;
+}
 
 int height(TREE_NODE* Root)
 {
@@ -21,7 +48,7 @@ TREE_NODE* TreeNewNode(int Value)
 	{
 		return NULL;
 	}
-	
+
 	newNode->Value = Value;
 	newNode->Right = NULL;
 	newNode->Left = NULL;
@@ -111,9 +138,10 @@ TREE_NODE* RightRotate(TREE_NODE* y)
 
 TREE_NODE* TreeNodeInsertion(TREE_NODE* Node, int Value)
 {
-	///Normal BST insertion
 	if (Node == NULL)
+	{
 		return(TreeNewNode(Value));
+	}
 
 	if (Value <= Node->Value)
 	{
@@ -123,36 +151,26 @@ TREE_NODE* TreeNodeInsertion(TREE_NODE* Node, int Value)
 	{
 		Node->Right = TreeNodeInsertion(Node->Right, Value);
 	}
-	/*else
-	{
-		///Equal Values are not allowed in BST 
-		return Node;
-	}*/
 
-	///Update height of this ancestor Node
 	Node->Height = 1 + max(height(Node->Left), height(Node->Right));
 
 	///Get the balance factor of this ancestor Node to check whether this Node became unbalanced
 	int Balance = TreeGetBalance(Node);
 
 	///If node is unbalanced => 4 cases
-
-	///Left Left Case 
 	if (Balance > 1 && Value < Node->Left->Value)
+	{
 		return RightRotate(Node);
-
-	///Right Right Case 
+	}
 	if (Balance < -1 && Value > Node->Right->Value)
+	{
 		return LeftRotate(Node);
-
-	///Left Right Case 
+	}
 	if (Balance > 1 && Value > Node->Left->Value)
 	{
 		Node->Left = LeftRotate(Node->Left);
 		return RightRotate(Node);
 	}
-
-	///Right Left Case 
 	if (Balance < -1 && Value < Node->Right->Value)
 	{
 		Node->Right = RightRotate(Node->Right);
@@ -171,25 +189,117 @@ int TreeInsert(CC_TREE* Tree, int Value)
 		return -1;
 	}
 
-	Tree->Size += 1;
-
 	///Tree is empty => new Node is the root.
 	if (NULL == Tree->Root)
 	{
 		Tree->Root = TreeNewNode(Value);
+		Tree->Size += 1;
 		return 0;
 	}
 
 	Tree->Root = TreeNodeInsertion(Tree->Root, Value);
+	Tree->Size += 1;
 
 	return 0;
 }
 
+TREE_NODE* TreeDeleteNode(TREE_NODE* Root, int Value)
+{
+	if (NULL == Root)
+	{
+		return Root;
+	}
+
+	///Key is smaller => go to left
+	if (Value < Root->Value)
+	{
+		Root->Left = TreeDeleteNode(Root->Left, Value);
+	}
+	///Key is greater => go to right
+	else if (Value > Root->Value)
+	{
+		Root->Right = TreeDeleteNode(Root->Right, Value);
+	}
+	else
+	{
+		///Node with 1 or no children
+		if (NULL == Root->Left || NULL == Root->Right)
+		{
+			TREE_NODE* aux = NULL == Root->Left ? Root->Left : Root->Right;
+
+			///No child case
+			if (NULL == aux)
+			{
+				aux = Root;
+				Root = NULL;
+			}
+			///One child case
+			else
+			{
+				///Copy the contents of the non-empty child 
+				*Root = *aux;
+			}
+			free(aux);
+		}
+		///Node with 2 children
+		else
+		{
+			// node with two children: Get the inorder 
+			// successor (smallest in the right subtree) 
+			TREE_NODE* aux = MinNode(Root->Right);
+
+			// Copy the inorder successor's data to this node 
+			Root->Value = aux->Value;
+
+			// Delete the inorder successor 
+			Root->Right = TreeDeleteNode(Root->Right, aux->Value);
+		}
+	}
+
+	// If the tree had only one node then return 
+	if (Root == NULL)
+	{
+		return Root;
+	}
+
+	Root->Height = 1 + max(height(Root->Left), height(Root->Right));
+
+	///Check balance.
+	int Balance = TreeGetBalance(Root);
+	
+	if (Balance > 1 && TreeGetBalance(Root->Left) >= 0)
+	{
+		return RightRotate(Root);
+	}
+	if (Balance > 1 && TreeGetBalance(Root->Left) < 0)
+	{
+		Root->Left = (Root->Left);
+		return RightRotate(Root);
+	}
+	if (Balance < -1 && TreeGetBalance(Root->Right) <= 0)
+	{
+		return LeftRotate(Root);
+	}
+	if (Balance < -1 && TreeGetBalance(Root->Right) > 0)
+	{
+		Root->Right = RightRotate(Root->Right);
+		return LeftRotate(Root);
+	}
+
+	return Root;
+}
+
 int TreeRemove(CC_TREE* Tree, int Value)
 {
-	CC_UNREFERENCED_PARAMETER(Tree);
-	CC_UNREFERENCED_PARAMETER(Value);
-	return -1;
+	if (NULL == Tree)
+	{
+		return -1;
+	}
+
+	TreeDeleteNode(Tree->Root, Value);
+	Tree->Size -= 1;
+
+	return 0;
 }
 
 int TreeContainsValue(TREE_NODE* Root, int Value)
@@ -204,7 +314,10 @@ int TreeContainsValue(TREE_NODE* Root, int Value)
 		}
 		else return (TreeContainsValue(Root->Left, Value) || TreeContainsValue(Root->Right, Value));
 	}
-	else return 0;
+	else
+	{
+		return 0;
+	}
 }
 
 int TreeContains(CC_TREE* Tree, int Value)
@@ -232,7 +345,7 @@ int TreeGetCount(CC_TREE* Tree)
 int TreeGetHeight(CC_TREE* Tree)
 {
 	///Return height of the tree. 
-	
+
 	if (NULL == Tree)
 	{
 		return -1;
@@ -281,19 +394,68 @@ int TreeGetNthPreorder(CC_TREE* Tree, int Index, int* Value)
 	return -1;
 }
 
-int TreeGetNthInorder(CC_TREE* Tree, int Index, int* Value)
+void GetInorderValue(TREE_NODE* Node, int Index, int* Value)
 {
-	CC_UNREFERENCED_PARAMETER(Tree);
+	CC_UNREFERENCED_PARAMETER(Node);
 	CC_UNREFERENCED_PARAMETER(Index);
 	CC_UNREFERENCED_PARAMETER(Value);
-	return -1;
+	return;
+}
+
+int TreeGetNthInorder(CC_TREE* Tree, int Index, int* Value)
+{
+	if (NULL == Tree)
+	{
+		return -1;
+	}
+	if (Index > Tree->Size || Index < 0)
+	{
+		return -1;
+	}
+	if (NULL == Value)
+	{
+		return -1;
+	}
+
+	GetInorderValue(Tree->Root, Index, Value);
+
+	return 0;
+}
+
+
+///WRONG!!!!!
+void GetPostorderValue(TREE_NODE* Node, int Index, int* Value)
+{
+	if (NULL != Node)
+	{
+		GetPostorderValue(Node->Left, Index, Value);
+		GetPostorderValue(Node->Right, Index, Value);
+		if (0 == Index)
+		{
+			*Value = Node->Value;
+			printf("V");
+		}
+		printf("%d ", Node->Value);
+	}
 }
 
 int TreeGetNthPostorder(CC_TREE* Tree, int Index, int* Value)
 {
-	CC_UNREFERENCED_PARAMETER(Tree);
-	CC_UNREFERENCED_PARAMETER(Index);
-	CC_UNREFERENCED_PARAMETER(Value);
-	return -1;
+	if (NULL == Tree)
+	{
+		return -1;
+	}
+	if (Index > Tree->Size || Index < 0)
+	{
+		return -1;
+	}
+	if (NULL == Value)
+	{
+		return -1;
+	}
+
+	GetPostorderValue(Tree->Root, Index, Value);
+
+	return 0;
 }
 
