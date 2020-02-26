@@ -1,6 +1,7 @@
 #include "ccstack.h"
 #include "common.h"
 
+//Create stack.
 int StCreate(CC_STACK** Stack)
 {
 	CC_STACK* newStack = (CC_STACK*)malloc(1 * sizeof(CC_STACK));
@@ -22,12 +23,14 @@ int StCreate(CC_STACK** Stack)
 	return 0;
 }
 
+//Destroy stack.
 int StDestroy(CC_STACK** Stack)
 {
 	if (NULL == *Stack)
 		return -1;
 	
-	while ((*Stack)->top != (*Stack)->base) {  ///Go from the top to the base and free the memory for each node.
+	while ((*Stack)->top != (*Stack)->base) 
+	{  ///Go from the top to the base and free the memory for each node.
 		NODE* node = (*Stack)->top->last;   ///Retain the node previous to the current top node. //????
 		free((*Stack)->top);
 		(*Stack)->top = node;   ///The new top is the second to last node in the initial stack.
@@ -41,6 +44,7 @@ int StDestroy(CC_STACK** Stack)
 	return 0;
 }
 
+//Push element with Value onto the stack.
 int StPush(CC_STACK* Stack, int Value)
 {
 	if (NULL == Stack)
@@ -61,6 +65,7 @@ int StPush(CC_STACK* Stack, int Value)
 	return 0;
 }
 
+//Pop element from the stack
 int StPop(CC_STACK* Stack, int* Value)
 {
 	if (0 == Stack->size || NULL == Stack)
@@ -75,6 +80,7 @@ int StPop(CC_STACK* Stack, int* Value)
 	return 0;
 }
 
+//Store value of the top element in the parameter Value.
 int StPeek(CC_STACK* Stack, int* Value)
 {
 	if (0 == Stack->size || NULL == Stack)
@@ -98,6 +104,7 @@ int StGetCount(CC_STACK* Stack)
 	return Stack->size;
 }
 
+//Empty the stack.
 int StClear(CC_STACK* Stack)
 {
 	if (NULL == Stack)
