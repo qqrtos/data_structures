@@ -4,6 +4,9 @@
 #include "cchashtable.h"
 #include "ccheap.h"
 #include "cctree.h"
+#include <stdlib.h>
+
+#define ARR_SIZE(arr) ( sizeof((arr)) / sizeof((arr[0])) ) ///used for tests
 
 int TestVector();
 int TestStack();
@@ -287,6 +290,39 @@ int TestTree()
 		goto cleanup;
 	}
 
+
+	/*
+	
+		BIG_TEST !!
+
+	*/
+
+
+	for (int i = 0; i < 500000; ++i)
+	{
+		TreeInsert(usedTree, i);
+	}
+	if (500000 != TreeGetCount(usedTree))
+	{
+		printf("TreeGetCount failed after BIG_TEST!\n");
+		retVal = -1;
+		goto cleanup;
+	}
+	if (0 != TreeClear(usedTree))
+	{
+		printf("TreeClear failed after BIG_TEST!\n");
+		retVal = -1;
+		goto cleanup;
+	}
+
+
+	/*
+
+		END_BIG_TEST !!
+
+	*/
+
+
 cleanup:
 	if (NULL != usedTree)
 	{
@@ -400,17 +436,45 @@ int TestHeap()
 		goto cleanup;
 	}
 
+
+	/*
+
+		BIG_TEST !!
+
+	*/
+
+	HpDestroy(&usedHeap);
+	HpCreateMaxHeap(&usedHeap, NULL);
+	for (int i = 0; i < 500000; ++i)
+	{
+		HpInsert(usedHeap, i);
+	}
+	HpRemove(usedHeap, 2500);
+	if (499999 != HpGetElementCount(usedHeap))
+	{
+		printf("HpGetCount failed after BIG_TEST!\n");
+		retVal = -1;
+		goto cleanup;
+	}
+
+
+	/*
+
+		END_BIG_TEST !!
+
+	*/
+
 cleanup:
 	if (NULL != usedHeap)
 	{
-		CC_VECTOR* vector = NULL;
+		/*CC_VECTOR* vector = NULL;
 		VecCreate(&vector);
 		HpSortToVector(usedHeap, vector);
 		printf("Sorted vector:  ");
 		for (int i = 0; i < vector->Count; ++i)
 		{
 			printf("%d ", vector->Array[i]);
-		}
+		}*/
 		
 		if (0 != HpDestroy(&usedHeap))
 		{
@@ -419,6 +483,22 @@ cleanup:
 		}
 	}
 	return retVal;
+}
+
+static char* RandString(char* str, size_t size)
+{
+	const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	if (size) 
+	{
+		--size;
+		for (size_t n = 0; n < size; n++) 
+		{
+			int key = rand() % (int)(sizeof charset - 1);
+			str[n] = charset[key];
+		}
+		str[size] = '\0';
+	}
+	return str;
 }
 
 int TestHashTable()
@@ -577,6 +657,42 @@ int TestHashTable()
 		goto cleanup;
 	}
 
+
+
+	/*
+
+		BIG_TEST !!
+
+	*/
+
+
+	HtClear(usedTable);
+	char* Key = (char*)malloc(256 * sizeof(char));
+	for (int i = 0; i < 10000; ++i)
+	{
+		Key = RandString(Key, 250);
+		HtSetKeyValue(usedTable, Key, i);
+	}
+	if (10000 != HtGetKeyCount(usedTable))
+	{
+		printf("HtGetKeyCount failed after BIG_TEST!\n");
+		retVal = -1;
+		goto cleanup;
+	}
+	if (0 != HtClear(usedTable))
+	{
+		printf("HtClear failed after BIG_TEST!\n");
+		retVal = -1;
+		goto cleanup;
+	}
+
+
+	/*
+
+		END_BIG_TEST !!
+
+	*/
+
 cleanup:
 	if (NULL != usedTable)
 	{
@@ -688,6 +804,33 @@ int TestStack()
 		goto cleanup;
 	}
 
+
+	/*
+
+		BIG_TEST !!
+
+	*/
+
+	StClear(usedStack);
+	for (int i = 0; i < 500000; ++i)
+	{
+		StPush(usedStack, i);
+	}
+	StPop(usedStack, &foundVal);
+	if (499999 != foundVal)
+	{
+		printf("StPop failed after BIG_TEST!\n");
+		retVal = -1;
+		goto cleanup;
+	}
+
+
+	/*
+
+		END_BIG_TEST !!
+
+	*/
+
 cleanup:
 	if (NULL != usedStack)
 	{
@@ -775,6 +918,38 @@ int TestVector()
 		retVal = -1;
 		goto cleanup;
 	}
+
+
+	/*
+
+		BIG_TEST !!
+
+	*/
+
+	VecClear(usedVector);
+	for (int i = 0; i < 500000; ++i)
+	{
+		VecInsertTail(usedVector, i);
+	}
+	if (0 != VecRemoveByIndex(usedVector, 250000))
+	{
+		printf("VecRemove failed after BIG_TEST!\n");
+		retVal = -1;
+		goto cleanup;
+	}
+	if (499999 != VecGetCount(usedVector))
+	{
+		printf("VecGetCount failed after BIG_TEST!\n");
+		retVal = -1;
+		goto cleanup;
+	}
+
+
+	/*
+
+		END_BIG_TEST !!
+
+	*/
 
 cleanup:
 	if (NULL != usedVector)
