@@ -221,6 +221,13 @@ int TestTree()
 		goto cleanup;
 	}
 
+	if (0 != TreeRemove(usedTree, -1))
+	{
+		printf("TreeRemove failed!\n");
+		retVal = -1;
+		goto cleanup;
+	}
+
 	if (13 != TreeGetCount(usedTree))
 	{
 		printf("TreeGetCount invalid return value after remove!\n");
@@ -242,13 +249,13 @@ int TestTree()
 		goto cleanup;
 	}
 
-	retVal = TreeGetNthPostorder(usedTree, 2, &foundVal);
+	retVal = TreeGetNthPostorder(usedTree, 3, &foundVal);
 	if (0 != retVal)
 	{
 		printf("TreeNthPostorder failed!");
 		goto cleanup;
 	}
-	printf("Value at index %d in postorder: %d\n", 2, foundVal);
+	printf("Value at index %d in postorder: %d\n", 3, foundVal);
 
 	retVal = TreeGetNthInorder(usedTree, 4, &foundVal);
 	if (0 != retVal)
@@ -257,6 +264,14 @@ int TestTree()
 		goto cleanup;
 	}
 	printf("Value at index %d in inorder: %d\n", 4, foundVal);
+	
+	retVal = TreeGetNthPreorder(usedTree, 6, &foundVal);
+	if (0 != retVal)
+	{
+		printf("TreeNthPreorder failed!");
+		goto cleanup;
+	}
+	printf("Value at index %d in inorder: %d\n", 6, foundVal);
 
 	if (0 != TreeClear(usedTree))
 	{

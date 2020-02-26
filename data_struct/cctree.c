@@ -107,7 +107,7 @@ TREE_NODE* LeftRotate(TREE_NODE* x)
 	TREE_NODE* y = x->Right;
 	TREE_NODE* T2 = y->Left;
 
-	///Perform left rotation 
+	///Left rotation 
 	y->Left = x;
 	x->Right = T2;
 
@@ -124,7 +124,7 @@ TREE_NODE* RightRotate(TREE_NODE* y)
 	TREE_NODE* x = y->Left;
 	TREE_NODE* T2 = x->Right;
 
-	///Perform right rotation 
+	///Right rotation 
 	x->Right = y;
 	y->Left = T2;
 
@@ -225,7 +225,7 @@ TREE_NODE* TreeDeleteNode(TREE_NODE* Root, int Value)
 		///Node with 1 or no children
 		if (NULL == Root->Left || NULL == Root->Right)
 		{
-			TREE_NODE* aux = NULL == Root->Left ? Root->Left : Root->Right;
+			TREE_NODE* aux = (NULL == Root->Left ? Root->Left : Root->Right);
 
 			///No child case
 			if (NULL == aux)
@@ -391,10 +391,23 @@ int TreeClear(CC_TREE* Tree)
 
 void GetPreorderValue(TREE_NODE* Node, int Index, int* Value)
 {
-	CC_UNREFERENCED_PARAMETER(Node);
-	CC_UNREFERENCED_PARAMETER(Index);
-	CC_UNREFERENCED_PARAMETER(Value);
-	return;
+	static int currentIndex = 0;
+
+	if (NULL != Node)
+	{
+		if (currentIndex <= Index)
+		{
+			if (currentIndex == Index)
+			{
+				*Value = Node->Value;
+			}
+			++currentIndex;
+			//printf("%d ", Node->Value);
+			
+			GetPreorderValue(Node->Left, Index, Value);
+			GetPreorderValue(Node->Right, Index, Value);
+		}
+	}
 }
 
 int TreeGetNthPreorder(CC_TREE* Tree, int Index, int* Value)
@@ -420,10 +433,24 @@ int TreeGetNthPreorder(CC_TREE* Tree, int Index, int* Value)
 
 void GetInorderValue(TREE_NODE* Node, int Index, int* Value)
 {
-	CC_UNREFERENCED_PARAMETER(Node);
-	CC_UNREFERENCED_PARAMETER(Index);
-	CC_UNREFERENCED_PARAMETER(Value);
-	return;
+	static int currentIndex = 0;
+
+	if (NULL != Node)
+	{
+		if (currentIndex <= Index)
+		{
+			GetInorderValue(Node->Left, Index, Value);
+			
+			if (currentIndex == Index)
+			{
+				*Value = Node->Value;
+			}
+			++currentIndex;
+			//printf("%d ", Node->Value);
+
+			GetInorderValue(Node->Right, Index, Value);
+		}
+	}
 }
 
 int TreeGetNthInorder(CC_TREE* Tree, int Index, int* Value)
@@ -448,10 +475,24 @@ int TreeGetNthInorder(CC_TREE* Tree, int Index, int* Value)
 
 void GetPostorderValue(TREE_NODE* Node, int Index, int* Value)
 {
-	CC_UNREFERENCED_PARAMETER(Node);
-	CC_UNREFERENCED_PARAMETER(Index);
-	CC_UNREFERENCED_PARAMETER(Value);
-	return;
+	static int currentIndex = 0;
+
+	if (NULL != Node)
+	{
+		if (currentIndex <= Index)
+		{
+			GetPostorderValue(Node->Left, Index, Value);
+			GetPostorderValue(Node->Right, Index, Value);
+
+			if (currentIndex == Index)
+			{
+				*Value = Node->Value;
+			}
+			++currentIndex;
+			
+			//printf("%d ", Node->Value);
+		}
+	}
 }
 
 int TreeGetNthPostorder(CC_TREE* Tree, int Index, int* Value)
