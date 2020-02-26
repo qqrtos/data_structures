@@ -1,5 +1,4 @@
 #pragma once
-#define INITIAL_TREE_SIZE 50
 
 typedef struct _TREE_NODE {
     int Value;

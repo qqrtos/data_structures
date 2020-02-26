@@ -1,5 +1,5 @@
 #pragma once
-#define INITIAL_VECTOR_SIZE 250
+#define INITIAL_VECTOR_SIZE 300
 
 typedef struct _CC_VECTOR {
     int *Array;
@@ -24,4 +24,4 @@ int VecClear(CC_VECTOR *Vector);
 int VecSort(CC_VECTOR *Vector);
 
 // Appends all the elements in DestVector to SrcVector
-int VecAppend(CC_VECTOR *DestVector, CC_VECTOR *SrcVector);  ///?!?!?! that indication makes no sense.
+int VecAppend(CC_VECTOR *DestVector, CC_VECTOR *SrcVector);
