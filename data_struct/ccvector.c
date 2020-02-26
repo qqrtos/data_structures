@@ -2,7 +2,7 @@
 #include "common.h"
 #include "string.h"
 
-
+//Create vector.
 int VecCreate(CC_VECTOR** Vector)
 {
 	CC_VECTOR* vec = NULL;
@@ -35,6 +35,7 @@ int VecCreate(CC_VECTOR** Vector)
 	return 0;
 }
 
+//Destroy vector.
 int VecDestroy(CC_VECTOR** Vector)
 {
 	CC_VECTOR* vec = *Vector;
@@ -52,6 +53,7 @@ int VecDestroy(CC_VECTOR** Vector)
 	return 0;
 }
 
+//Insert element after last position.
 int VecInsertTail(CC_VECTOR* Vector, int Value)
 {
 	if (NULL == Vector)
@@ -77,6 +79,7 @@ int VecInsertTail(CC_VECTOR* Vector, int Value)
 	return 0;
 }
 
+//Insert element at first position.
 int VecInsertHead(CC_VECTOR* Vector, int Value)
 {
 	if (NULL == Vector)
@@ -106,9 +109,15 @@ int VecInsertHead(CC_VECTOR* Vector, int Value)
 	return 0;
 }
 
+//Insert Value after given index.
 int VecInsertAfterIndex(CC_VECTOR* Vector, int Index, int Value)
 {
 	if (NULL == Vector)
+	{
+		return -1;
+	}
+
+	if (Index < 0)
 	{
 		return -1;
 	}
@@ -136,6 +145,7 @@ int VecInsertAfterIndex(CC_VECTOR* Vector, int Index, int Value)
 	return 0;
 }
 
+//Remove value from Index.
 int VecRemoveByIndex(CC_VECTOR* Vector, int Index)
 {
 	if (NULL == Vector)
@@ -156,6 +166,7 @@ int VecRemoveByIndex(CC_VECTOR* Vector, int Index)
 	return 0;
 }
 
+//Save the value from Index into the parameter Value.
 int VecGetValueByIndex(CC_VECTOR* Vector, int Index, int* Value)
 {
 	if (NULL == Vector)
@@ -206,6 +217,7 @@ int BinarySearch(int* Array, int Item, int Low, int High)
 	return BinarySearch(Array, Item, mid + 1, High);
 }
 
+//Sort vector (ascending).
 int VecSort(CC_VECTOR* Vector)
 {
 	///Binary insertion sort.
