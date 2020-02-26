@@ -5,6 +5,7 @@
 #include "ccheap.h"
 #include "cctree.h"
 #include <stdlib.h>
+#include <time.h>
 
 #define ARR_SIZE(arr) ( sizeof((arr)) / sizeof((arr[0])) ) ///used for tests
 
@@ -24,6 +25,8 @@ int main(void)
 
 void RunTests()
 {
+	clock_t clocc = clock();
+
 	if (0 == TestVector())
 	{
 		printf("Vector test passed\n\n");
@@ -68,6 +71,10 @@ void RunTests()
 	{
 		printf("Tree test failed\n\n");
 	}
+
+	clocc = clock() - clocc;
+	float time_taken = ((float)clocc) / CLOCKS_PER_SEC;
+	printf("\nProgram finished in: %.3f seconds.\n", time_taken);
 }
 
 
