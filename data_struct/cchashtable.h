@@ -11,6 +11,7 @@ typedef struct _ELEMENT {
 typedef struct _CC_HASH_TABLE {
     // Members
     int Size;
+    int Count;
     ELEMENT** Array;
 } CC_HASH_TABLE;
 

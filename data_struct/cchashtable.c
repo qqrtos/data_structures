@@ -77,6 +77,8 @@ int HtInsert(CC_HASH_TABLE* HashTable, int index, ELEMENT* entry)
 		return -1;
 	}
 
+	HashTable->Count += 1;
+
 	///Insert at first available spot.
 	for (int i = index; i < HashTable->Size; ++i)
 	{
@@ -139,6 +141,7 @@ int HtRealloc(CC_HASH_TABLE** HashTable)
 	}
 	newHash->Size = Size;
 	newHash->Array = Array;
+	newHash->Count = 0;
 
 	///Allocate the new elements.
 	for (int i = INITIAL_HASHTABLE_SIZE; i < Size; ++i)
@@ -192,6 +195,7 @@ int HtCreate(CC_HASH_TABLE** HashTable)
 	}
 
 	newHash->Size = INITIAL_HASHTABLE_SIZE;
+	newHash->Count = 0;
 	newHash->Array = (ELEMENT**)malloc(INITIAL_HASHTABLE_SIZE * sizeof(ELEMENT*));
 
 	if (NULL == newHash->Array)
@@ -269,7 +273,7 @@ int HtSetKeyValue(CC_HASH_TABLE* HashTable, char* Key, int Value)
 
 	int index = GetIndexFromKey(HashTable, Key);
 
-	if (HtGetKeyCount(HashTable) == HashTable->Size)
+	if (HashTable->Count == HashTable->Size)
 	{
 		///Table is too full, so resize it and repeat the search.
 		HtRealloc(&HashTable);

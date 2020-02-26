@@ -668,12 +668,12 @@ int TestHashTable()
 
 	HtClear(usedTable);
 	char* Key = (char*)malloc(256 * sizeof(char));
-	for (int i = 0; i < 10000; ++i)
+	for (int i = 0; i < 200000; ++i)
 	{
 		Key = RandString(Key, 250);
 		HtSetKeyValue(usedTable, Key, i);
 	}
-	if (10000 != HtGetKeyCount(usedTable))
+	if (200000 != HtGetKeyCount(usedTable))
 	{
 		printf("HtGetKeyCount failed after BIG_TEST!\n");
 		retVal = -1;
