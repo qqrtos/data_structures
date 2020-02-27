@@ -94,6 +94,7 @@ int TreeDestroy(CC_TREE** Tree)
 	}
 
 	CC_TREE* newTree = *Tree;
+	TreeClear(newTree);
 	free(newTree);
 
 	(*Tree)->Size = 0;

@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define ARR_SIZE(arr) ( sizeof((arr)) / sizeof((arr[0])) ) ///used for tests
 
 int TestVector();
 int TestStack();
