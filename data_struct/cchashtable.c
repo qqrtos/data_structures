@@ -479,19 +479,6 @@ int HtGetNextKey(CC_HASH_TABLE_ITERATOR* Iterator, char** Key)
 		}
 	}
 
-	for (int i = 0; i < Iterator->Index; ++i)
-	{
-		ELEMENT* entry = Iterator->HashTable->Array[i];
-		if (0 == entry->isAvailable && 0 == entry->isDeleted)
-		{
-			Iterator->Current = entry;
-			Iterator->Index = i;
-			///strcpy_s(*Key, sizeof(Iterator->HashTable->Array[i]->Key), Iterator->HashTable->Array[i]->Key);
-			memcpy(Key, entry->Key, sizeof(entry->Key));
-			return 0;
-		}
-	}
-
 	return -2;
 }
 
